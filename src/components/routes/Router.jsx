@@ -4,19 +4,22 @@ import Home from '../home/Home';
 import PostUser from '../postUser/Postuser';
 import Profile from '../profile/Profile';
 import Login from '../login/Login';
-
+import Footer from '../footer/Footer'
 
 const Router = () => {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/home/:id" element={<Home />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/post" element={<PostUser />} />
-      </Routes>
-    </BrowserRouter>
-  );
+    return (
+        <div>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<Login />} />
+                    <Route path="/home/:id" element={<Home />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/post" element={<PostUser />} />
+                </Routes>
+            </BrowserRouter>
+            <Footer />
+        </div>
+    );
 };
 
 export default Router;
