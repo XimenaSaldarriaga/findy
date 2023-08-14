@@ -6,6 +6,11 @@ import messages from '../../assets/messages.png'
 import comment from '../../assets/comment.png'
 import send from '../../assets/send.png'
 import save from '../../assets/save.png'
+import home from '../../assets/home.png'
+import bell from '../../assets/bell.png'
+import search from '../../assets/search.png'
+import add from '../../assets/add.png'
+
 
 const Home = () => {
 
@@ -84,12 +89,26 @@ const Home = () => {
                         </div>
 
                         <div>
-                            <p className='home__footer'> <span className='home__nameFooter'>Neis Rosado</span> Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veniam consectetur maiores aperiam cumque eum voluptatibus dignissimos accusantium natus aspernatur veritatis, quia harum sunt sint blanditiis ipsa autem molestias quae culpa.</p>
+                            <p className='home__footerPost'> <span className='home__namePost'>Neis Rosado</span> Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veniam consectetur maiores aperiam cumque eum voluptatibus dignissimos accusantium natus aspernatur veritatis, quia harum sunt sint blanditiis ipsa autem molestias quae culpa.</p>
                         </div>
                     </div>
 
                 </div>
             </div>
+
+            <div className='home__footer'>
+            <div className='home__footerLeft'>
+                <img src={home} alt="" />
+                <img src={search} alt="" />
+            </div>
+            <div>
+                <img src={add} alt="" />
+            </div>
+            <div className='home__footerRight'>
+                <img src={bell} alt="" />
+                <button className='home__user' ></button>
+            </div>
+        </div>
 
         </div>
     )

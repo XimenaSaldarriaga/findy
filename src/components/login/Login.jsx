@@ -7,9 +7,7 @@ import Swal from 'sweetalert2';
 import { URL_USERS } from '../../services/data';
 import { useNavigate } from 'react-router-dom';
 
-
 const Login = () => {
-
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm();
 
@@ -29,7 +27,7 @@ const Login = () => {
             confirmButton: 'sweetalert-confirm-button',
           },
         });
-        navigate('/home');
+        navigate(`/home/${user.id}`);
       } else {
         Swal.fire({
           text: '¡Los datos ingresados son incorrectos!',
