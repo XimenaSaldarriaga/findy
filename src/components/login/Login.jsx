@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import './Login.scss';
 import logo from '../../assets/logo.png';
 import axios from 'axios';
-import Swal from 'sweetalert2'; // Importa SweetAlert2
+import Swal from 'sweetalert2';
 import { URL_USERS } from '../../services/data';
 
 const Login = () => {
@@ -17,9 +17,23 @@ const Login = () => {
       const user = users.find(user => user.email === data.email && user.password === data.password);
 
       if (user) {
-        Swal.fire('¡Bienvenido!', '', 'success'); 
+        Swal.fire({
+          text: '¡Bienvenido!',
+          confirmButtonColor: '#FF7674',
+          customClass: {
+            content: 'sweetalert-content',
+            confirmButton: 'sweetalert-confirm-button',
+          },
+        });
       } else {
-        Swal.fire('Los datos ingresados son incorrectos', '', 'error'); 
+        Swal.fire({
+          text: '¡Los datos ingresados son incorrectos!',
+          confirmButtonColor: '#FF7674',
+          customClass: {
+            content: 'sweetalert-content',
+            confirmButton: 'sweetalert-confirm-button',
+          },
+        });
       }
     } catch (error) {
       console.error('Error:', error);
@@ -74,4 +88,3 @@ const Login = () => {
 }
 
 export default Login;
-
