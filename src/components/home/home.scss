@@ -137,34 +137,5 @@ body {
         font-weight: 700;
     }
 
-    &__footer {
-        background-color: #FF7674;
-        display: flex;
-        padding: 20px;
-        justify-content: space-between;
-        width: 100%;
-    }
-
-    &__footerLeft {
-        display: flex;
-        align-items: center;
-        width: 20%;
-        justify-content: space-between;
-    }
-
-    &__footerRight {
-        display: flex;
-        align-items: center;
-        width: 20%;
-        justify-content: space-between;
-    }
-
-    &__user {
-        width: 23px;
-        height: 23px;
-        border: none;
-        border-radius: 50%;
-        outline: none;
-    }
 
 }
