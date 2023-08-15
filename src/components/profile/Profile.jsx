@@ -1,70 +1,91 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './profile.scss'
+import { useUser } from '../userContext/UserContext'
+import axios from 'axios'
+import { URL_USERS } from '../../services/data'
+
 
 const Profile = () => {
+  const { userId } = useUser();
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(`${URL_USERS}/${userId}`);
+        setCurrentUser(response.data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, [userId]);
+
   return (
-    <div className='profile'>
-      <img className='profile__image' src="https://s3-alpha-sig.figma.com/img/9b3b/6ddb/0ccefa9a4a76163a79e386eba01d08ba?Expires=1692576000&Signature=cUPjrviqt1qRSix6Kai52mgjogKJbwls~~8bYJtYG2o7DowGlKkU8iT~tuPLfeZAyWKM14MkqlNJeuoC93xPoaxv-Qq2Qm7gaJd4ENRwI9a3ksx1~OHC5LzkgdjcQvqMPPVZBkF82Bz~wp2QbcRnwMYbj7Gc-pdCC2P3W9TqGDnC57TwN9sNqZlZD8feXk47co-Ww33avVnXrFea7E3qXSlKkD~9Okx6rTBcq11-tNUUTqplryfxXGMM-dCVqofKcYfOs1GAO5WsWDemWzRAY98mPuNsjcW-39ifUecMBCATEYORuIASCnrS6na4zapL8N7-nFofpKZzurBbLDtO4A__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" alt="" />
+    <>
+      {currentUser && (
+        <div className='profile'>
 
-      <div className='profile__info'>
+          <img className='profile__image' src={currentUser.banner} alt={currentUser.username} />
+          <div className='profile__info'>
 
-        <div className='profile__likes'>
-          <div className='profile__option'>
-            <p className='profile__subtitle'>10.7 M</p>
-            <p>Followers</p>
-          </div>
-          <input className='profile__input' type="url" />
-          <div className='profile__option'>
-            <p className='profile__subtitle'>108.3 M</p>
-            <p >Likes</p>
-          </div>
-        </div>
+            <div className='profile__likes'>
+              <div className='profile__option'>
+                <p className='profile__subtitle'>10.7 M</p>
+                <p>Followers</p>
+              </div>
+              {/* <input className='profile__input' type="url" /> */}
+              <img className='profile__input' src={currentUser.avatar}alt={currentUser.username} />
+              <div className='profile__option'>
+                <p className='profile__subtitle'>108.3 M</p>
+                <p >Likes</p>
+              </div>
+            </div>
 
-        <div className='profile__personal'>
-          <p className='profile__subtitle'>Jennie Kim</p>
-          <div className='profile__about'>
-            <p>Hello Guys</p>
-            <p>Follow and like my post</p>
-          </div>
-        </div>
+            <div className='profile__personal'>
+              <p className='profile__subtitle'>{currentUser.name}</p>
+              <div className='profile__about'>
+                <p>{currentUser.status}</p>
 
-        <div className='profile__buttons'>
-          <button>Follow</button>
-          <button>Messages</button>
-        </div>
+              </div>
+            </div>
 
-      </div>
+            <div className='profile__buttons'>
+              <button>Follow</button>
+              <button>Messages</button>
+            </div>
 
-
-      <div className='profile__posts'>
-        <ul className='profile__options'>
-          <li>Photos</li>
-          <li>Videos</li>
-          <li>Album</li>
-          <li>Tag</li>
-        </ul>
-
-        <div className='profile__photos'>
-
-          <div className='profile__photodiv'>
-            <img className='profile__photo' src="https://s3-alpha-sig.figma.com/img/bc3b/dcc1/67006aac91c99ed7b37fb3d72d058ad9?Expires=1692576000&Signature=I93~crCohnjI1PWpDjilvjphsAutw44mgIunUHJZU5lOO937G5-lHJAP69OXIXzB4XoiINwx4VbnOpqD9Q5rRudlJX5jZlUsnui0pon0XaA6Q~fBKXJSn5sK1hh~hoIbLZT0zbMcLPMOBRUEayTn4~84AmfWGDvhXGWzAs0bewxUk2FxNanwoMaBdFs~volsC-X-Ny4qtIoF2QdyuxTrCihNop9S4xXENwzWhl6C0hlGKF5Oy6Pc8iY0wcVyPbVKrFUbJFnIvG~NnRWUlGVIT6o3iC0A169ii43CzpX-mNZXOHjiWvp7r8cTbGByvlf48KKPo1k1QACmgGijQ4c3ew__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" alt="" />
           </div>
 
-          <div className='profile__photodiv'><img className='profile__photo' src="https://s3-alpha-sig.figma.com/img/47a3/b386/305d6fd1514463f1edc8412d7ae7b45c?Expires=1692576000&Signature=QWrcXF2RFQ60PRsiEB0lObCRDm8sbd3WnVro5k-Ggm75zSbF2GcogxaAocFNXd4wjXnmzyDb~93r2oIc8HLDmABOD0IJ87xhx3rLW-P3yoRwG-muqNxK6-bmRYNDNLTqn7-5Ph96PkuBzfernypjN3S5ptSTqfd2o5IJUXyqUgVqiEhVkPz497HWX16UKZvJ53Xce9I9IAnitYvYonN6yzbH0AiLQdkwZBg~Fw0WB7U4NqgAzZDObJKL7zrxjv-R9o9wLkG4~nmbDo-TshCrnIPhfMvRY7JFJYaenETYfUfHq6KvX-nccQcLSLH7o5nMLYIYhn2sFpnAyGUsORHPng__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" alt="" /></div>
 
-          <div className='profile__photodiv'><img className='profile__photo' src="https://s3-alpha-sig.figma.com/img/80d3/d616/68632c49988f908bc63533338e923678?Expires=1692576000&Signature=ZPpwgmaGQDVfNaXbASaEdVu5A2FPNGnB5AC-cS2eNvdqv1qyg-lCeYvuBgA01TVpKSo89UkKBC0TKE2TcpvZB5exxKf1UFHXbaiopp6tJoFTs3oH7iJ04~71097qSGaiMSwKFZK3CDdN6HQdvqL-qpt8cKIkcR4Sv0xZ0ZQJC~cwiHAuW8KBMDW53AC~m5D3C4gpSbYW04p5ODLfmIItn4T6nc39ajmIQ6VkjfwFgiNsHbeNLsouaHhekxLDDpKnnizJK3Y9XmGQROg6KDvDtkTF17Z-H41-mqYFqMkKX2WBsqeBp77V4ZkE28wkfjHJN4Mb0djlTM2teSWoTJoStg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" alt="" /></div>
+          <div className='profile__posts'>
+            <ul className='profile__options'>
+              <li>Photos</li>
+              <li>Videos</li>
+              <li>Album</li>
+              <li>Tag</li>
+            </ul>
 
-          <div className='profile__photodiv'><img className='profile__photo' src="
+            <div className='profile__photos'>
+
+              <div className='profile__photodiv'>
+                <img className='profile__photo' src="https://s3-alpha-sig.figma.com/img/bc3b/dcc1/67006aac91c99ed7b37fb3d72d058ad9?Expires=1692576000&Signature=I93~crCohnjI1PWpDjilvjphsAutw44mgIunUHJZU5lOO937G5-lHJAP69OXIXzB4XoiINwx4VbnOpqD9Q5rRudlJX5jZlUsnui0pon0XaA6Q~fBKXJSn5sK1hh~hoIbLZT0zbMcLPMOBRUEayTn4~84AmfWGDvhXGWzAs0bewxUk2FxNanwoMaBdFs~volsC-X-Ny4qtIoF2QdyuxTrCihNop9S4xXENwzWhl6C0hlGKF5Oy6Pc8iY0wcVyPbVKrFUbJFnIvG~NnRWUlGVIT6o3iC0A169ii43CzpX-mNZXOHjiWvp7r8cTbGByvlf48KKPo1k1QACmgGijQ4c3ew__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" alt="" />
+              </div>
+
+              <div className='profile__photodiv'><img className='profile__photo' src="https://s3-alpha-sig.figma.com/img/47a3/b386/305d6fd1514463f1edc8412d7ae7b45c?Expires=1692576000&Signature=QWrcXF2RFQ60PRsiEB0lObCRDm8sbd3WnVro5k-Ggm75zSbF2GcogxaAocFNXd4wjXnmzyDb~93r2oIc8HLDmABOD0IJ87xhx3rLW-P3yoRwG-muqNxK6-bmRYNDNLTqn7-5Ph96PkuBzfernypjN3S5ptSTqfd2o5IJUXyqUgVqiEhVkPz497HWX16UKZvJ53Xce9I9IAnitYvYonN6yzbH0AiLQdkwZBg~Fw0WB7U4NqgAzZDObJKL7zrxjv-R9o9wLkG4~nmbDo-TshCrnIPhfMvRY7JFJYaenETYfUfHq6KvX-nccQcLSLH7o5nMLYIYhn2sFpnAyGUsORHPng__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" alt="" /></div>
+
+              <div className='profile__photodiv'><img className='profile__photo' src="https://s3-alpha-sig.figma.com/img/80d3/d616/68632c49988f908bc63533338e923678?Expires=1692576000&Signature=ZPpwgmaGQDVfNaXbASaEdVu5A2FPNGnB5AC-cS2eNvdqv1qyg-lCeYvuBgA01TVpKSo89UkKBC0TKE2TcpvZB5exxKf1UFHXbaiopp6tJoFTs3oH7iJ04~71097qSGaiMSwKFZK3CDdN6HQdvqL-qpt8cKIkcR4Sv0xZ0ZQJC~cwiHAuW8KBMDW53AC~m5D3C4gpSbYW04p5ODLfmIItn4T6nc39ajmIQ6VkjfwFgiNsHbeNLsouaHhekxLDDpKnnizJK3Y9XmGQROg6KDvDtkTF17Z-H41-mqYFqMkKX2WBsqeBp77V4ZkE28wkfjHJN4Mb0djlTM2teSWoTJoStg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" alt="" /></div>
+
+              <div className='profile__photodiv'><img className='profile__photo' src="
           https://s3-alpha-sig.figma.com/img/e16a/f17a/4805fb0a220637377cce1952fd4f4a39?Expires=1692576000&Signature=Rptr~vpa89PlskoUq2GFt2fT7UTO59ettcTanaTrjAII1F0kAoTCg1lvJ~omr0ZZNPaqKsn4kiB2H1lLj763jCCL1j5lXlBOqtIhndkyn22TTAs2werGv1zspp60NTWD-gLuCg61ktevo7~oQOOf3k1CIfSSTI-EHp4cDUn8F-aLTML9pD5ythN0F6cyvACttG5xvQsmxKagvMk-EIqobdhm7wpQK5JmZ1jfBSrCoeAmM3H0vq8Ds7XhZrdf9C9bcTTKe8EDTsd~ymKDvh-hY7u~nQkfr6UjlcwHMnDIvdjUmwCgHG-kaKVhQOE5BGw1qcA6LGKfpB1y8n27TbCPug__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" alt="" /></div>
 
+            </div>
+          </div>
         </div>
-
-
-      </div>
-
-
-    </div>
-  )
-}
+      )}
+    </>
+  );
+};
 
 export default Profile

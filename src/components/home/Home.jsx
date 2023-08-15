@@ -6,9 +6,11 @@ import messages from '../../assets/messages.png'
 import comment from '../../assets/comment.png'
 import send from '../../assets/send.png'
 import save from '../../assets/save.png'
+import { useParams } from 'react-router-dom'
 
 
-const Home = () => {
+const Home = () =>  {
+    const { id } = useParams(); 
 
     const storyData = [
 
