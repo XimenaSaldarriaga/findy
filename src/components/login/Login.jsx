@@ -1,26 +1,31 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import './Login.scss';
-import logo from '../../assets/logo.png';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import { URL_USERS } from '../../services/data';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '../userContext/UserContext';
+import { useAuth } from '../authContext';
+import logo from '../../assets/logo.png';
+import { URL_USERS } from '../../services/data';
+import './login.scss'
 
 const Login = () => {
   const navigate = useNavigate();
+  const { dispatch } = useAuth();
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const { setUserId } = useUser();
+
   const onSubmit = async (data) => {
     try {
       const response = await axios.get(URL_USERS);
-      const users = response.data; 
+      const users = response.data;
 
       const user = users.find(user => user.email === data.email && user.password === data.password);
 
       if (user) {
-        setUserId(user.id); // id
+        dispatch({ type: 'SET_USER', payload: { userId: user.id } });
+  
+        localStorage.setItem('userId', user.id);
+        localStorage.setItem('authenticated', 'true');
+
         Swal.fire({
           text: '¡Bienvenido!',
           confirmButtonColor: '#FF7674',
@@ -29,6 +34,7 @@ const Login = () => {
             confirmButton: 'sweetalert-confirm-button',
           },
         });
+
         navigate(`/home/${user.id}`);
       } else {
         Swal.fire({
