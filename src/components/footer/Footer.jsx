@@ -42,7 +42,9 @@ const Footer = () => {
             </div>
             <div className='footer__right'>
                 <img src={bell} alt="" />
-                <button className='footer__user' onClick={() => goToProfile(userId)}></button>
+                <button  className='footer__user'  onClick={() => goToProfile(userId)}>
+                    <img src="" alt="" />
+                </button>
             </div>
             {showPostForm && <PostForm onClose={closePostForm} />}
         </div>
