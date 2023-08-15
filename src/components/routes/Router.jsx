@@ -6,6 +6,7 @@ import PostUser from '../postUser/PostUser';
 import Profile from '../profile/Profile';
 import Login from '../login/Login';
 import Footer from '../footer/Footer';
+import UpdateUsers from '../updateUser/UpdateUser';
 
 const Router = () => {
     return (
@@ -16,6 +17,7 @@ const Router = () => {
             <Route path="/home/:id" element={<Home />} />
             <Route path="/profile/:userId" element={<Profile />} />
             <Route path="/post" element={<PostUser />} />
+            <Route path="/update/:id" element={<UpdateUsers />} />
           </Routes>
           <Footer />
         </BrowserRouter>
