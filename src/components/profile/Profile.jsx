@@ -5,12 +5,15 @@ import axios from 'axios'
 import { URL_USERS } from '../../services/data'
 import dots from '../../assets/dots.png'
 import arrow from '../../assets/arrow.png'
+import edit from '../../assets/edit.png'
+import logout from '../../assets/logout.png'
 
 
 
 const Profile = () => {
   const { userId } = useUser();
   const [currentUser, setCurrentUser] = useState(null);
+  const [showSidebar, setShowSidebar] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -30,16 +33,22 @@ const Profile = () => {
       {currentUser && (
         <div className='profile'>
           <img className='profile__image' src={currentUser.banner} alt={currentUser.username} />
-          <img className='profile__dots' src={dots} alt="" />
+          <img className='profile__dots' src={dots} alt="" onClick={() => setShowSidebar(!showSidebar)} />
+
+          {showSidebar && (
+            <div className='profile__sidebar'>
+              <button > <img className='profile__icons' src={edit} alt="" />Edit Profile</button>
+              <button > <img className='profile__icons' src={logout} alt="" />Logout</button>
+            </div>
+          )}
           <img className='profile__arrow' src={arrow} alt="" />
           <div className='profile__info'>
-
             <div className='profile__likes'>
               <div className='profile__option'>
                 <p className='profile__subtitle'>10.7 M</p>
                 <p>Followers</p>
               </div>
-              <img className='profile__input' src={currentUser.avatar}alt={currentUser.username} />
+              <img className='profile__input' src={currentUser.avatar} alt={currentUser.username} />
               <div className='profile__option'>
                 <p className='profile__subtitle'>108.3 M</p>
                 <p >Likes</p>
