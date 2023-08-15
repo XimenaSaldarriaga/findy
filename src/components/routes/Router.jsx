@@ -5,20 +5,23 @@ import PostUser from '../postUser/Postuser';
 import Profile from '../profile/Profile';
 import Login from '../login/Login';
 import Footer from '../footer/Footer'
+import { UserProvider } from '../userContext/UserContext';
 
 const Router = () => {
     return (
-        <div>
+        <UserProvider>
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<Login />} />
                     <Route path="/home/:id" element={<Home />} />
-                    <Route path="/profile" element={<Profile />} />
+                    {/* <Route path="/profile" element={<Profile />} /> */}
+                    <Route path="/profile/:userId" element={<Profile />} />
                     <Route path="/post" element={<PostUser />} />
                 </Routes>
+                <Footer />
+
             </BrowserRouter>
-            <Footer />
-        </div>
+        </UserProvider>
     );
 };
 
