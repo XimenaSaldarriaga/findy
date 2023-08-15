@@ -3,6 +3,9 @@ import './profile.scss'
 import { useUser } from '../userContext/UserContext'
 import axios from 'axios'
 import { URL_USERS } from '../../services/data'
+import dots from '../../assets/dots.png'
+import arrow from '../../assets/arrow.png'
+
 
 
 const Profile = () => {
@@ -26,8 +29,9 @@ const Profile = () => {
     <>
       {currentUser && (
         <div className='profile'>
-
           <img className='profile__image' src={currentUser.banner} alt={currentUser.username} />
+          <img className='profile__dots' src={dots} alt="" />
+          <img className='profile__arrow' src={arrow} alt="" />
           <div className='profile__info'>
 
             <div className='profile__likes'>
@@ -35,7 +39,6 @@ const Profile = () => {
                 <p className='profile__subtitle'>10.7 M</p>
                 <p>Followers</p>
               </div>
-              {/* <input className='profile__input' type="url" /> */}
               <img className='profile__input' src={currentUser.avatar}alt={currentUser.username} />
               <div className='profile__option'>
                 <p className='profile__subtitle'>108.3 M</p>
