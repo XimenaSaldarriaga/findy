@@ -7,12 +7,14 @@ import dots from '../../assets/dots.png';
 import arrow from '../../assets/arrow.png';
 import edit from '../../assets/edit.png';
 import logout from '../../assets/logout.png';
+import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
-  const { state } = useAuth();
+  const { state, dispatch } = useAuth();
   const userId = state.userId || localStorage.getItem('userId');
   const [currentUser, setCurrentUser] = useState(null);
   const [showSidebar, setShowSidebar] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -27,6 +29,18 @@ const Profile = () => {
     fetchUserData();
   }, [userId]);
 
+  const handleLogout = () => {
+    dispatch({ type: 'LOGOUT' });
+    localStorage.removeItem('userId');
+    navigate('/');
+  };
+
+  const goToHome = () => {
+    if (userId) {
+      navigate(`/home/${userId}`);
+    }
+  };
+
   return (
     <>
       {currentUser && (
@@ -37,10 +51,10 @@ const Profile = () => {
           {showSidebar && (
             <div className='profile__sidebar'>
               <button > <img className='profile__icons' src={edit} alt="" />Edit Profile</button>
-              <button > <img className='profile__icons' src={logout} alt="" />Logout</button>
+              <button onClick={handleLogout}> <img className='profile__icons' src={logout} alt="" />Logout</button>
             </div>
           )}
-          <img className='profile__arrow' src={arrow} alt="" />
+          <img className='profile__arrow' src={arrow} alt="" onClick={goToHome} />
           <div className='profile__info'>
             <div className='profile__likes'>
               <div className='profile__option'>
