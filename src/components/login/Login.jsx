@@ -6,11 +6,12 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { URL_USERS } from '../../services/data';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../userContext/UserContext';
 
 const Login = () => {
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm();
-
+  const { setUserId } = useUser();
   const onSubmit = async (data) => {
     try {
       const response = await axios.get(URL_USERS);
@@ -19,6 +20,7 @@ const Login = () => {
       const user = users.find(user => user.email === data.email && user.password === data.password);
 
       if (user) {
+        setUserId(user.id); // id
         Swal.fire({
           text: '¡Bienvenido!',
           confirmButtonColor: '#FF7674',
