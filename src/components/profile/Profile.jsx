@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import './profile.scss'
-import { useUser } from '../userContext/UserContext'
-import axios from 'axios'
-import { URL_USERS } from '../../services/data'
-import dots from '../../assets/dots.png'
-import arrow from '../../assets/arrow.png'
-import edit from '../../assets/edit.png'
-import logout from '../../assets/logout.png'
-
-
+import React, { useEffect, useState } from 'react';
+import './profile.scss';
+import { useAuth } from '../authContext';
+import axios from 'axios';
+import { URL_USERS } from '../../services/data';
+import dots from '../../assets/dots.png';
+import arrow from '../../assets/arrow.png';
+import edit from '../../assets/edit.png';
+import logout from '../../assets/logout.png';
 
 const Profile = () => {
-  const { userId } = useUser();
+  const { state } = useAuth();
+  const userId = state.userId || localStorage.getItem('userId');
   const [currentUser, setCurrentUser] = useState(null);
   const [showSidebar, setShowSidebar] = useState(false);
 
@@ -51,7 +50,7 @@ const Profile = () => {
               <img className='profile__input' src={currentUser.avatar} alt={currentUser.username} />
               <div className='profile__option'>
                 <p className='profile__subtitle'>108.3 M</p>
-                <p >Likes</p>
+                <p>Likes</p>
               </div>
             </div>
 
@@ -59,7 +58,6 @@ const Profile = () => {
               <p className='profile__subtitle'>{currentUser.name}</p>
               <div className='profile__about'>
                 <p>{currentUser.status}</p>
-
               </div>
             </div>
 
@@ -67,9 +65,7 @@ const Profile = () => {
               <button>Follow</button>
               <button>Messages</button>
             </div>
-
           </div>
-
 
           <div className='profile__posts'>
             <ul className='profile__options'>
@@ -78,7 +74,6 @@ const Profile = () => {
               <li>Album</li>
               <li>Tag</li>
             </ul>
-
             <div className='profile__photos'>
 
               <div className='profile__photodiv'>
@@ -100,4 +95,4 @@ const Profile = () => {
   );
 };
 
-export default Profile
+export default Profile;
