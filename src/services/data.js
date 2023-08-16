@@ -15,15 +15,16 @@ export const fetchUserData = async (userId) => {
 };
 
 export const fetchPostData = async (userId) => {
-    try {
-        const response = await axios.get(`${URL_POSTS}/${userId}`);
-        console.log("Post data:", response.data);
-        return response.data; 
-    } catch (error) {
-        console.log('Error obteniendo los datos del post', error);
-    }
-    
-}; 
+  try {
+      const response = await axios.get(`${URL_POSTS}?userId=${userId}`);
+      console.log("Post data:", response.data);
+      return response.data; 
+  } catch (error) {
+      console.log('Error obteniendo los datos del post', error);
+      return []; 
+  }
+};
+
 
 export const fetchCommentData = async (commentId) => {
     try {
