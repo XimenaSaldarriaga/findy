@@ -7,6 +7,7 @@ import arrow from '../../assets/arrow.png';
 import edit from '../../assets/edit.png';
 import logout from '../../assets/logout.png';
 import { useNavigate } from 'react-router-dom';
+import UpdateUsers from '../updateUser/UpdateUser';
 
 
 const Profile = () => {
@@ -17,7 +18,17 @@ const Profile = () => {
   const [displayMode, setDisplayMode] = useState('photos');
 
   const [showSidebar, setShowSidebar] = useState(false);
+  const [showUpdateForm, setShowUpdateForm] = useState(false);
   const navigate = useNavigate();
+
+  const toggleUpdateForm = () => {
+    setShowUpdateForm(!showUpdateForm);
+    
+  };
+
+  const closeUpdateForm = () => {
+    setShowUpdateForm(false);
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -61,7 +72,6 @@ const Profile = () => {
     }
   };
 
-
   return (
     <>
       {currentUser && (
@@ -69,9 +79,9 @@ const Profile = () => {
           <img className='profile__image' src={currentUser.banner} alt={currentUser.username} />
           <img className='profile__dots' src={dots} alt="" onClick={() => setShowSidebar(!showSidebar)} />
 
-          {showSidebar && (
+          {showSidebar && !showUpdateForm && (
             <div className='profile__sidebar'>
-              <button > <img className='profile__icons' src={edit} alt="" />Edit Profile</button>
+              <button onClick={toggleUpdateForm}> <img className='profile__icons' src={edit} alt="" />Edit Profile</button>
               <button onClick={handleLogout}> <img className='profile__icons' src={logout} alt="" />Logout</button>
             </div>
           )}
@@ -156,6 +166,7 @@ const Profile = () => {
               </div>
             </div>
           </div>
+          {showUpdateForm && <UpdateUsers onClose={closeUpdateForm} />}
         </div>
       )}
     </>
