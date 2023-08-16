@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { AuthProvider } from '../authContext.jsx';
 import Home from '../home/Home';
 import PostUser from '../postUser/PostUser';
@@ -16,13 +16,24 @@ const Router = () => {
             <Route path="/" element={<Login />} />
             <Route path="/home/:id" element={<Home />} />
             <Route path="/profile/:userId" element={<Profile />} />
-            <Route path="/post" element={<PostUser />} />
+            <Route path="/post/:userId" element={<PostUser />} />
           </Routes>
-          <Footer />
+          <ShowFooterOnNonLoginPage />
         </BrowserRouter>
       </AuthProvider>
     );
   };
+
+  const ShowFooterOnNonLoginPage = () => {
+    const location = useLocation();
+    const isLoginPage = location.pathname === '/';
+
+    if (isLoginPage) {
+        return null; 
+    }
+
+    return <Footer />;
+};
 
   export default Router;
 
