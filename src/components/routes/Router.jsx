@@ -17,7 +17,6 @@ const Router = () => {
             <Route path="/home/:id" element={<Home />} />
             <Route path="/profile/:userId" element={<Profile />} />
             <Route path="/post" element={<PostUser />} />
-            <Route path="/update/:id" element={<UpdateUsers />} />
           </Routes>
           <Footer />
         </BrowserRouter>
