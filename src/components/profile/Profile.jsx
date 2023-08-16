@@ -70,7 +70,7 @@ const Profile = () => {
           <img className='profile__image' src={currentUser.banner} alt={currentUser.username} />
           <img className='profile__dots' src={dots} alt="" onClick={() => setShowSidebar(!showSidebar)} />
 
-          {showSidebar && (
+          {showSidebar && !showUpdateForm && (
             <div className='profile__sidebar'>
               <button onClick={toggleUpdateForm}> <img className='profile__icons' src={edit} alt="" />Edit Profile</button>
               <button onClick={handleLogout}> <img className='profile__icons' src={logout} alt="" />Logout</button>
