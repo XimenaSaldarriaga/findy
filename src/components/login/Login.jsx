@@ -27,7 +27,7 @@ const Login = () => {
         localStorage.setItem('authenticated', 'true');
 
         Swal.fire({
-          text: '¡Bienvenido!',
+          text: '¡Welcome!',
           confirmButtonColor: '#FF7674',
           customClass: {
             content: 'sweetalert-content',
