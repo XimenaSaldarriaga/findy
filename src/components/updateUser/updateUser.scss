@@ -1,0 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans&display=swap');
+
+.updateFormOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.updateUsers {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+    font-family: 'Balsamiq Sans', cursive;
+    color: #2F2F2F;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    width: 380px;
+    background-color: #F8F8F8;
+    &__title {        
+        color:#FF7674;
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        width: 320px;
+        h2{
+            margin-top: 0px;
+            margin-left: 75px;
+        }
+        &__close {
+            margin: -20px -15px 20px  0;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            span {
+                font-size: 14px;
+                font-weight: bold;
+            }
+        }
+    }
+    &__form {
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 10px;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        width: 300px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        gap: .3rem;
+    }
+    &__askInfo {
+        display: flex;
+        flex-direction: column;
+    }
+    &__samp {
+        font-size: 12.5px;
+        font-family: 'Balsamiq Sans', cursive;
+        color: rgba(255, 188, 116, 1);
+    }
+    &__input {
+        border: none;
+        outline: none;
+        border-bottom: 1px solid #ccc;
+        padding: 0px;
+        margin-bottom: 5px;
+        margin-top: 5px;
+        width: 100%;
+        background-color: transparent;
+        font-family: 'Balsamiq Sans', cursive;
+        color: #2F2F2F;
+    }
+    &__input::placeholder {
+        font-family: 'Balsamiq Sans', cursive;
+    }
+    &__errors {
+        margin: 0;
+        font-size: 10px;
+        color: #FF7674;
+    }
+    &__buttonDiv {
+        display: flex;
+        align-self: center;
+    }
+    &__button {
+        background-color: #FF7674;
+        font-family: 'Balsamiq Sans', cursive;
+        color: #FFF;
+        border: none;
+        outline: none;
+        padding: 6px 30px;
+        border-radius: 50px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+}
+.swal2-popup {
+    font-family: 'Balsamiq Sans', cursive;
+    font-size: 16px;
+}
+.swal2-confirm {
+    font-family: 'Balsamiq Sans', cursive;
+}

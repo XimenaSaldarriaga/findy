@@ -1,0 +1,172 @@
+@import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.profile {
+
+    font-family: 'Balsamiq Sans', cursive;
+    color: #2F2F2F;
+
+    &__image {
+        display: flex;
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+       }
+
+    &__info {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        background: radial-gradient(50% 50.00% at 50% 50.00%, rgba(255, 118, 116, 0.60) 0%, rgba(255, 118, 116, 0.00) 100%);
+    }
+
+    &__likes {
+        position: relative;
+        display: flex;
+        justify-content: space-around;
+        align-items: end;
+    }
+
+    &__personal {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        line-height: 0;
+    }
+
+    &__subtitle {
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    &__about {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 12px;
+    }
+
+    &__option {
+        font-size: 12px;
+        line-height: 0px;
+    }
+
+    &__input {
+        position: absolute;
+        display: flex;
+        object-fit: cover;
+        border-radius: 50%;
+        width: 80px;
+        height: 80px;
+        border: 2px solid #FF7674;
+        text-align: center;
+        outline: none;
+    }
+
+    &__buttons {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    &__buttons button {
+        width: 190px;
+        height: 35px;
+        flex-shrink: 0;
+        border-radius: 10px;
+        border: none;
+        outline: none;
+        background: linear-gradient(144deg, #EB5E5C 0%, #FF7674 100%);
+        color: #F8F8F8;
+        font-feature-settings: 'clig' off, 'liga' off;
+        font-family: 'Balsamiq Sans';
+        font-size: 18px;
+        font-weight: 500;
+    }
+
+    &__posts {
+        padding: 10px 40px 10px 10px;
+        border-radius: 30px;
+        background: #FFF;
+        margin-top: 20px;
+
+    }
+
+    &__options {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &__options li {
+        list-style: none;
+    }
+
+    &__photos {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        padding: 10px 0px 10px 30px ;
+    }
+
+    &__photodiv {
+        width: calc(50% - 10px);
+    }
+
+    &__photo {
+        width: 100%;
+        height: 90%;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    &__dots {
+        width: 20px;
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        cursor: pointer;
+    }
+
+    &__arrow {
+        position: absolute;
+        top: 30px;
+        left: 30px;
+        cursor: pointer;
+    }
+
+    &__sidebar {
+        position: absolute;
+        top: 60px; 
+        right: 10px;
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 30px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        z-index: 1;
+      }
+
+      &__sidebar button {
+        font-family: 'Balsamiq Sans', cursive;
+        color: #2F2F2F;
+        font-size: 16px;
+        margin: 10px;
+        cursor: pointer;
+        border: none;
+        background-color: transparent;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      &__icons {
+        width: 15px;
+        height: 15px;
+      }
+}

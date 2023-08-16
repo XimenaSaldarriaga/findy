@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans&display=swap');
+
+
+body {
+    background: #F8F8F8;
+    margin: 0;
+    padding: 0;
+}
+
+.home {
+
+    font-family: 'Balsamiq Sans', cursive;
+    color: #2F2F2F;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    margin: 20px 40px 0px 0px;
+
+    &__header {
+        margin-left: 20px;
+    }
+
+    &__main {
+        margin-left: 20px;
+    }
+
+
+    &__images {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &__vectors {
+        display: flex;
+        gap: 2rem;
+    }
+
+    &__vector {
+        object-fit: contain;
+    }
+
+    &__url {
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        border: 2px solid #FF7674;
+        justify-content: center;
+        line-height: 20px;
+        text-align: center;
+        font-size: 30px;
+        outline: none;
+    }
+
+    &__imgPost {
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        border: 2px solid #FF7674;
+        justify-content: center;
+        line-height: 20px;
+        text-align: center;
+        font-size: 30px;
+        outline: none;
+    }
+
+    &__yourStory {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+
+    }
+
+    &__stories {
+        display: flex;
+        gap: 1rem;
+        font-size: 12px;
+        line-height: 14.4px;
+        font-weight: 400;
+        margin-top: 10px;
+        align-items: center;
+    }
+
+    &__allStories {
+        display: flex;
+        gap: 1rem;
+    }
+
+    &__post {
+        display: flex;
+        flex-direction: column;
+        border-radius: 10px;
+        background: #FFF;
+        border-radius: 10px;
+        width: 100%;
+        padding: 10px;
+        gap: 0.5rem;
+    }
+
+    &__postHeader {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    &__postImagen {
+        width: 100%;
+        border-radius: 10px;
+    }
+
+    &__options {
+        display: flex;
+        gap: 1rem;
+    }
+
+    &__option {
+        font-size: 12px;
+        line-height: 0;
+    }
+
+    &__postOptions {
+        margin-top: 5px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &__footerPost {
+        font-size: 12px;
+        line-height: 18px;
+    }
+
+    &__namePost {
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+
+}

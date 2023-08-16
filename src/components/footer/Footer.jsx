@@ -1,0 +1,57 @@
+import React, { useState } from 'react';
+import './footer.scss';
+import home from '../../assets/home.png';
+import bell from '../../assets/bell.png';
+import search from '../../assets/search.png';
+import add from '../../assets/add.png';
+import PostForm from '../postForm/PostForm';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../authContext';
+
+const Footer = () => {
+    const { state } = useAuth();
+    const { userId, isAuthenticated } = state;
+    const [showPostForm, setShowPostForm] = useState(false);
+    const navigate = useNavigate();
+  
+    const togglePostForm = () => {
+      setShowPostForm(!showPostForm);
+    };
+  
+    const closePostForm = () => {
+      setShowPostForm(false);
+    };
+  
+    const goToProfile = () => {
+      if (userId && isAuthenticated) {
+        navigate(`/profile/${userId}`);
+      }
+    };
+  
+    const goToHome = () => {
+      if (userId && isAuthenticated) {
+        navigate(`/home/${userId}`);
+      }
+    };
+
+  return (
+    <div className='footer'>
+      <div className='footer__left'>
+        <img src={home} alt="" onClick={goToHome} />
+        <img src={search} alt="" />
+      </div>
+      <div className='footer__center'>
+        <img src={add} alt="" onClick={togglePostForm} />
+      </div>
+      <div className='footer__right'>
+        <img src={bell} alt="" />
+        <button className='footer__user' onClick={goToProfile}>
+          <img src="" alt="" />
+        </button>
+      </div>
+      {showPostForm && <PostForm onClose={closePostForm} />}
+    </div>
+  );
+};
+
+export default Footer;
