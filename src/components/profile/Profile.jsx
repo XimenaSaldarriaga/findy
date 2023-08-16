@@ -8,14 +8,6 @@ import edit from '../../assets/edit.png';
 import logout from '../../assets/logout.png';
 import { useNavigate } from 'react-router-dom';
 
-function isYouTubeLink(url) {
-  return url.includes('youtube.com');
-}
-
-function getVideoIdFromUrl(url) {
-  const urlParams = new URLSearchParams(new URL(url).search);
-  return urlParams.get('v');
-}
 
 const Profile = () => {
   const { state, dispatch } = useAuth();
@@ -51,6 +43,12 @@ const Profile = () => {
     fetchPost();
   }, [userId]);
 
+  const isYouTubeLink = (url) => url.includes('youtube.com');
+  const getVideoIdFromUrl = (url) => {
+    const parts = url.split('/');
+    return parts[parts.length - 1];
+  };
+  
   const handleLogout = () => {
     dispatch({ type: 'LOGOUT' });
     localStorage.removeItem('userId');
@@ -133,7 +131,9 @@ const Profile = () => {
                         src={`https://www.youtube.com/embed/${getVideoIdFromUrl(post.content)}`}
                         frameBorder='0'
                         allowFullScreen
+                        
                       />
+                      
                     ))}
               </div>
               <div className='profile__album'>
