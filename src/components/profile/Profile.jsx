@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './profile.scss';
 import { useAuth } from '../authContext';
-import axios from 'axios';
-import { URL_USERS } from '../../services/data';
+import { fetchPostData, fetchUserData } from '../../services/data';
 import dots from '../../assets/dots.png';
 import arrow from '../../assets/arrow.png';
 import edit from '../../assets/edit.png';
@@ -13,20 +12,33 @@ const Profile = () => {
   const { state, dispatch } = useAuth();
   const userId = state.userId || localStorage.getItem('userId');
   const [currentUser, setCurrentUser] = useState(null);
+  const [userPost, setUserPost] = useState([]);
+
   const [showSidebar, setShowSidebar] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchUser = async () => {
       try {
-        const response = await axios.get(`${URL_USERS}/${userId}`);
-        setCurrentUser(response.data);
+        const userData = await fetchUserData(userId);
+        setCurrentUser(userData);
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
     };
 
-    fetchUserData();
+    const fetchPost = async () => {
+      try {
+        const postData = await fetchPostData(userId);
+        setUserPost(postData);
+        console.log("userPost inside useEffect:", postData);
+            } catch (error) {
+        console.log('Error obteniendo los post', error);
+      }
+    };
+
+    fetchUser();
+    fetchPost();
   }, [userId]);
 
   const handleLogout = () => {
@@ -41,6 +53,7 @@ const Profile = () => {
     }
   };
 
+  
   return (
     <>
       {currentUser && (
@@ -58,12 +71,12 @@ const Profile = () => {
           <div className='profile__info'>
             <div className='profile__likes'>
               <div className='profile__option'>
-                <p className='profile__subtitle'>10.7 M</p>
+                <p className='profile__subtitle'> {currentUser.followers} M </p>
                 <p>Followers</p>
               </div>
               <img className='profile__input' src={currentUser.avatar} alt={currentUser.username} />
               <div className='profile__option'>
-                <p className='profile__subtitle'>108.3 M</p>
+                <p className='profile__subtitle'>{userPost.likes} M</p>
                 <p>Likes</p>
               </div>
             </div>
