@@ -143,15 +143,16 @@ body {
 
     &__videos {
         width: calc(50% - 10px);
+        height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
     }
 
+
     &__video {
         width: 100%;
         border-radius: 10px;
-        height: 90%;
         object-fit: cover;
     }
 
