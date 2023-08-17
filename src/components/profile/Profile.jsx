@@ -181,10 +181,10 @@ const Profile = () => {
               <div className='profile__album'>
                 {displayMode === 'album' &&
                   userPost.map(post => (
-                    <div key={post.id} className='profile__photo'>
+                    <div key={post.id} className='profile__photoAlbum'>
                       {isYouTubeLink(post.content) ? (
                         <iframe
-                          className='profile__video'
+                          className='profile__videoAlbum'
                           title={post.caption}
                           src={`https://www.youtube.com/embed/${getVideoIdFromUrl(post.content)}`}
                           frameBorder='0'
