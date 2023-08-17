@@ -52,6 +52,7 @@ const UpdateUsers = ({ onClose }) => {
       setValue('status', userData.status);
       setValue('avatar', userData.avatar);
       setValue('banner', userData.banner);
+      setValue('story', userData.story);
       setValue('followers', userData.followers);
       setValue('following', userData.following);
       setValue('posts', userData.posts);
