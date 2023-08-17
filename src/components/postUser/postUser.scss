@@ -5,6 +5,7 @@
     font-family: 'Balsamiq Sans', cursive;
     color: #2F2F2F;
     background: radial-gradient(50% 50.00% at 50% 50.00%, rgba(255, 116, 183, 0.30) 0%, rgba(255, 188, 116, 0.00) 100%);
+    margin-bottom: 120px;
 
 
     &__image {
@@ -12,7 +13,15 @@
         border-radius: 0px 0px 30px 30px;
     }
 
+    &__arrow {
+        position: absolute;
+        top: 30px;
+        left: 30px;
+        cursor: pointer;
+    }
+
     &__all {
+        position: relative;
         margin: 20px 20px 40px 20px;
         display: flex;
         flex-direction: column;
@@ -24,6 +33,8 @@
     }
 
     &__info {
+        position: absolute;
+        bottom: 180px;
         display: flex;
         background-color: #FFF;
         border-radius: 30px;
