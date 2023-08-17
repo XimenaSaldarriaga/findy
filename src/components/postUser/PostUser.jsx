@@ -4,12 +4,18 @@ import heart from '../../assets/heart.png'
 import comment from '../../assets/comment.png'
 import send from '../../assets/send.png'
 import white from '../../assets/arrow-white.png'
+import { Link } from 'react-router-dom'
 
 const PostUser = () => {
+
+  const userId = 'yourUserId';
+
   return (
     <div className='post'>
       <img className='post__image' src="https://s3-alpha-sig.figma.com/img/e16a/f17a/4805fb0a220637377cce1952fd4f4a39?Expires=1693180800&Signature=TIV6UK-wjy08selUQQsWxhJTU4O731UP8DrGCjlHxKfLQW49RMeiMLWM-vuQFZdhb0Vx~udYwPsEIFxoYXjEpb90REvuqtA9RL52gBd3hrpYhg5WID2H6USr20Ia6r3dcmiFFNESLHoZKtaQeCsPhy8pSJCmYcR99gU-bZi-zYqWsaZXY1zv9oZeCVugEpj52hWmpI-IdXqrBKrLjMcXx9o7qouAwEVz7xOTiIJENbgsZ9YnH2CiifsQpjyzDPZziU5FvMYct1Gschb9ElY8dj-Gc4O~1HEvYrLTky9iNwaIBvjnMZCco2Qnhf~YkldiWvH~wN6Qoq55~T9ZURKfuw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" alt="" />
-      <img className='post__arrow' src={ white } alt="" />
+      <Link to={`/home/${userId}`}>
+        <img className='post__arrow' src={white} alt="" />
+      </Link>
 
       <div className='post__all'>
 
