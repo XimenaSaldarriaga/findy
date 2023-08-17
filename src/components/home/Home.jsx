@@ -118,7 +118,7 @@ const Home = () => {
                             </div>
 
                             <div>
-                                <p className='home__footerPost'> <span className='home__namePost'>Neis Rosado</span> {post.caption}</p>
+                                <p className='home__footerPost'> <span className='home__namePost'>{users[post.userId]?.username}</span> {post.caption}</p>
                             </div>
                         </div>
                     </div>
