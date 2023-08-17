@@ -14,8 +14,16 @@
         margin: 20px;
     }
 
+    &__left img {
+        cursor: pointer;
+    }
+
     &__center {
         margin: 20px;
+    }
+
+    &__center img {
+        cursor: pointer;
     }
     
     &__right {
@@ -24,6 +32,10 @@
         width: 20%;
         justify-content: space-between;
         margin: 20px;
+    }
+
+    &__right img {
+        cursor: pointer;
     }
     
     &__user {

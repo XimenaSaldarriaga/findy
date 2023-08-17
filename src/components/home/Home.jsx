@@ -125,7 +125,7 @@ const Home = () => {
                         >
                             {post.content.includes('youtube') ? (
                                 <iframe
-                                    className='home__postImagen'
+                                    className='home__postVideo'
                                     src={post.content}
                                     title='YouTube Video'
                                 />
@@ -137,7 +137,7 @@ const Home = () => {
                                 <div className='home__options'>
                                     <div className='home__option'>
                                         <img src={heart} alt="" />
-                                        <p>300K</p>
+                                        <p>{post.likes}</p>
                                     </div>
                                     <div className='home__option'>
                                         <img src={comment} alt="" />
@@ -153,7 +153,7 @@ const Home = () => {
                             </div>
 
                             <div>
-                                <p className='home__footerPost'> <span className='home__namePost'>Neis Rosado</span> Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veniam consectetur maiores aperiam cumque eum voluptatibus dignissimos accusantium natus aspernatur veritatis, quia harum sunt sint blanditiis ipsa autem molestias quae culpa.</p>
+                                <p className='home__footerPost'> <span className='home__namePost'>{users[post.userId]?.username}</span> {post.caption}</p>
                             </div>
                         </div>
                     </div>
@@ -165,4 +165,13 @@ const Home = () => {
     )
 }
 
-export default Home
+export default Home;
+
+
+
+
+
+
+
+
+
