@@ -24,7 +24,8 @@ const Router = () => {
               <Route element={<PrivateRouter isAutenticate={isAuthenticated} />}>
                 <Route path="/home/:id" element={<Home signIn={setIsAuthenticated} login={isAuthenticated} />} />
                 <Route path="/profile/:userId" element={<Profile signIn={setIsAuthenticated} login={isAuthenticated} />} />
-                <Route path="/post/:userId" element={<PostUser signIn={setIsAuthenticated} login={isAuthenticated} />}   ></Route>
+                <Route path="/post/:postId" element={<PostUser signIn={setIsAuthenticated} login={isAuthenticated} />} />
+
               </Route>
              </Routes>
           <ShowFooterOnNonLoginPage />
