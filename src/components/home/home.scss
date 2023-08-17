@@ -29,6 +29,7 @@ body {
     &__images {
         display: flex;
         justify-content: space-between;
+        margin-bottom: 20px;
     }
 
     &__vectors {
@@ -54,8 +55,8 @@ body {
 
     &__imgPost {
         border-radius: 50%;
-        width: 30px;
-        height: 30px;
+        width: 40px;
+        height: 40px;
         border: 2px solid #FF7674;
         justify-content: center;
         line-height: 20px;

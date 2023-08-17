@@ -1,7 +1,7 @@
 import axios from 'axios';
 const URL_JSON_SERVER = "http://localhost:5000"
 export const URL_USERS = `${URL_JSON_SERVER}/users`;
-const URL_POSTS = `${URL_JSON_SERVER}/posts`;
+export const URL_POSTS = `${URL_JSON_SERVER}/posts`;
 const URL_COMMENTS = `${URL_JSON_SERVER}/comments`;
 
 export const fetchUserData = async (userId) => {
