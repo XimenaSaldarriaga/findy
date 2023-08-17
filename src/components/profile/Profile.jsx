@@ -169,24 +169,26 @@ const Profile = () => {
                     .map(post => (
                       <img className='profile__photo' src={post.content} alt={post.caption} key={post.id} onClick={() => goToPostUser(post.id)} />
                     ))}
-                {displayMode === 'videos' &&
-                  userPost
-                    .filter(post => isYouTubeLink(post.content))
-                    .map(post => (
-                      <div
-                        key={post.id}
-                        className='profile__videoContainer'
-                        onClick={() => goToPostUser(post.id)} 
-                      >
-                        <iframe
-                          className='profile__video'
-                          title={post.caption}
-                          src={`https://www.youtube.com/embed/${getVideoIdFromUrl(post.content)}`}
-                          frameBorder='0'
-                          allowFullScreen
-                        />
-                      </div>
-                    ))}
+                <div className='profile__videoContainer'>
+                  {displayMode === 'videos' &&
+                    userPost
+                      .filter(post => isYouTubeLink(post.content))
+                      .map(post => (
+                        <div
+                          key={post.id}
+                          className='profile__videos'
+                          onClick={() => goToPostUser(post.id)}
+                        >
+                          <iframe
+                            className='profile__video'
+                            title={post.caption}
+                            src={`https://www.youtube.com/embed/${getVideoIdFromUrl(post.content)}`}
+                            frameBorder='0'
+                            allowFullScreen
+                          />
+                        </div>
+                      ))}
+                </div>
               </div>
               <div className='profile__album' >
                 {displayMode === 'album' &&
