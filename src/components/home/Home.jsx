@@ -90,7 +90,7 @@ const Home = () => {
                         >
                             {post.content.includes('youtube') ? (
                                 <iframe
-                                    className='home__postImagen'
+                                    className='home__postVideo'
                                     src={post.content}
                                     title='YouTube Video'
                                 />
