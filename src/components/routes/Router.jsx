@@ -6,7 +6,6 @@ import PostUser from '../postUser/PostUser';
 import Profile from '../profile/Profile';
 import Login from '../login/Login';
 import Footer from '../footer/Footer';
-import UpdateUsers from '../updateUser/UpdateUser';
 
 const Router = () => {
     return (

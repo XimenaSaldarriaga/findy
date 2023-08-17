@@ -23,7 +23,7 @@ const Profile = () => {
 
   const toggleUpdateForm = () => {
     setShowUpdateForm(!showUpdateForm);
-    
+
   };
 
   const closeUpdateForm = () => {
@@ -59,7 +59,7 @@ const Profile = () => {
     const parts = url.split('/');
     return parts[parts.length - 1];
   };
-  
+
   const handleLogout = () => {
     dispatch({ type: 'LOGOUT' });
     localStorage.removeItem('userId');
@@ -141,9 +141,9 @@ const Profile = () => {
                         src={`https://www.youtube.com/embed/${getVideoIdFromUrl(post.content)}`}
                         frameBorder='0'
                         allowFullScreen
-                        
+
                       />
-                      
+
                     ))}
               </div>
               <div className='profile__album'>
