@@ -104,15 +104,18 @@ body {
 
     &__options li {
         list-style: none;
+        cursor: pointer;
+    }
+
+    &__options li.active {
+        border-bottom: 3px solid #EB5E5C;
     }
 
     &__photos {
         display: flex;
         justify-content: space-between;
         flex-wrap: wrap;
-        // padding: 10px 0px 10px 30px;
         padding: 10px;
-
     }
 
     &__photodiv {

@@ -27,6 +27,8 @@
     }
     
     &__user {
+        display: flex;
+        object-fit: cover;
         width: 26px;
         height: 26px;
         border: none;

@@ -20,6 +20,7 @@ const Profile = () => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const navigate = useNavigate();
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const toggleUpdateForm = () => {
     setShowUpdateForm(!showUpdateForm);
@@ -118,10 +119,41 @@ const Profile = () => {
 
           <div className='profile__posts'>
             <ul className='profile__options'>
-              <li onClick={() => setDisplayMode('photos')}>Photos</li>
-              <li onClick={() => setDisplayMode('videos')}>Videos</li>
-              <li onClick={() => setDisplayMode('album')}>Album</li>
-              <li>Tag</li>
+              <li
+                onClick={() => {
+                  setDisplayMode('photos');
+                  setActiveIndex(0);
+                }}
+                className={activeIndex === 0 ? 'active' : ''}
+              >
+                Photos
+              </li>
+              <li
+                onClick={() => {
+                  setDisplayMode('videos');
+                  setActiveIndex(1);
+                }}
+                className={activeIndex === 1 ? 'active' : ''}
+              >
+                Videos
+              </li>
+              <li
+                onClick={() => {
+                  setDisplayMode('album');
+                  setActiveIndex(2);
+                }}
+                className={activeIndex === 2 ? 'active' : ''}
+              >
+                Album
+              </li>
+              <li
+                onClick={() => {
+                  setActiveIndex(3);
+                }}
+                className={activeIndex === 3 ? 'active' : ''}
+              >
+                Tag
+              </li>
             </ul>
             <div className='profile__photos'>
               <div className='profile__photodiv'>
