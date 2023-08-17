@@ -106,10 +106,26 @@ body {
 
     &__postHeader {
         display: flex;
-        align-items: center;
-        gap: 5px;
+        justify-content: space-between;
+        
         font-size: 14px;
         font-weight: 700;
+    }
+    &__input{
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    button {
+        background-color: #FF7674;
+        font-family: 'Balsamiq Sans', cursive;
+        color: #FFF;
+        border: none;
+        outline: none;
+        padding: 3px 10px;
+        border-radius: 50px;
+        cursor: pointer;
+        justify-self: end;
     }
 
     &__postContainer {

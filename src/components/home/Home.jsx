@@ -6,8 +6,9 @@ import messages from '../../assets/messages.png'
 import comment from '../../assets/comment.png'
 import send from '../../assets/send.png'
 import save from '../../assets/save.png'
-import { fetchUserData, URL_POSTS } from '../../services/data'
+import { fetchUserData, URL_POSTS, URL_USERS } from '../../services/data'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 
 const Home = () => {
@@ -41,6 +42,38 @@ const Home = () => {
         fetchData();
     }, [userId]);
 
+    const handleFollow = async (userIdToFollow, usernameToFollow) => {
+        const loggedInUserId = localStorage.getItem('userId');
+    
+        try {
+            const responsePostUser = await axios.get(`${URL_USERS}/${userIdToFollow}`);
+            const postUser = responsePostUser.data;
+            const responseLoggedInUser = await axios.get(`${URL_USERS}/${loggedInUserId}`);
+            const loggedInUser = responseLoggedInUser.data;
+            const isAlreadyFollowing = loggedInUser.following.some(user => user.id === userIdToFollow);
+            
+            if (!isAlreadyFollowing) {
+                const userToFollow = { id: userIdToFollow, username: usernameToFollow };
+                const updatedLoggedInUser = {
+                    ...loggedInUser,
+                    following: [...loggedInUser.following, userToFollow],
+                };
+                
+                await axios.patch(`${URL_USERS}/${loggedInUserId}`, updatedLoggedInUser);
+                const updatedPostUser = {
+                    ...postUser,
+                    followers: [...postUser.followers, { id: loggedInUserId, username: loggedInUser.username }],
+                };
+                await axios.patch(`${URL_USERS}/${userIdToFollow}`, updatedPostUser);
+    
+                console.log(`Siguiendo a ${usernameToFollow} (ID: ${userIdToFollow})`);
+            } else {
+                console.log('Ya sigues a este usuario');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
     const goToPostUser = (postId) => {
         navigate(`/post/${postId}`);
     }
@@ -82,9 +115,11 @@ const Home = () => {
                         <div className=' home__postHeader'>
                             <div className='home__input'>
                                 <img className='home__imgPost' src={users[post.userId]?.avatar} alt='User Avatar' />
+                                <span className='home__span'>{users[post.userId]?.username}</span>
                             </div>
-                            <span className='home__span'>{users[post.userId]?.username}</span>
-                        </div>
+                            
+                            <button onClick={() => handleFollow(users[post.userId]?.id, users[post.userId]?.username)}>Follow</button>
+                            </div>
                         <div className='home__postContainer'
                             onClick={() => goToPostUser(post.id)}
                         >

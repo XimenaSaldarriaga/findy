@@ -34,3 +34,13 @@ export const fetchCommentData = async (commentId) => {
         console.log('Error obteniendo los comentarios del post', error);
     }
 };
+
+export const followUser = async (followerId, userIdToFollow) => {
+  try {
+      const response = await axios.post(`${URL_USERS}/${userIdToFollow}/followers`, { followerId });
+      return response.data;
+  } catch (error) {
+      console.error('Error al seguir al usuario', error);
+      throw error;
+  }
+};

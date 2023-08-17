@@ -8,6 +8,7 @@ import edit from '../../assets/edit.png';
 import logout from '../../assets/logout.png';
 import { useNavigate } from 'react-router-dom';
 import UpdateUsers from '../updateUser/UpdateUser';
+import FollowersList from '../followersList/FollowersList';
 
 
 const Profile = () => {
@@ -16,7 +17,7 @@ const Profile = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [userPost, setUserPost] = useState([]);
   const [displayMode, setDisplayMode] = useState('photos');
-
+  const [showFollowersList, setShowFollowersList] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const navigate = useNavigate();
@@ -96,14 +97,14 @@ const Profile = () => {
           <div className='profile__info'>
             <div className='profile__likes'>
               <div className='profile__option'>
-                <p className='profile__subtitle'> {currentUser.followers} M </p>
+                <p className='profile__subtitle' onClick={() => setShowFollowersList(true)}> {currentUser.followers.length} M </p>
                 <p>Followers</p>
               </div>
               <img className='profile__input' src={currentUser.avatar} alt={currentUser.username} />
               <div className='profile__option'>
                 <p className='profile__subtitle'>
                   {userPost
-                    .filter(post => post.userId === currentUser.id) // Filtrar los posts por userId
+                    .filter(post => post.userId === currentUser.id)
                     .reduce((totalLikes, post) => totalLikes + post.likes, 0)} M
                 </p>
                 <p>Likes</p>
@@ -211,6 +212,12 @@ const Profile = () => {
             </div>
           </div>
           {showUpdateForm && <UpdateUsers onClose={closeUpdateForm} />}
+          {showFollowersList && (
+        <FollowersList
+          followers={currentUser.followers}
+          onClose={() => setShowFollowersList(false)} 
+        />
+      )}
         </div>
       )}
     </>
