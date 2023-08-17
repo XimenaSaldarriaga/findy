@@ -49,7 +49,7 @@ const Footer = () => {
           <img src="" alt="" />
         </button>
       </div>
-      {showPostForm && <PostForm onClose={closePostForm} />}
+      {showPostForm && <PostForm onClose={closePostForm} userId={userId} />}
     </div>
   );
 };

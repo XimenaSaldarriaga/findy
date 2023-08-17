@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
 import './postForm.scss';
+import { URL_POSTS } from '../../services/data';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
-const PostForm = ({ onClose }) => {
+const PostForm = ({ onClose, userId }) => {
     const [postData, setPostData] = useState({
-        text: '',
-        url: ''
+        userId: userId,
+        content: '',
+        caption: '',
+        likes: 5,       
+        comments: [] 
     });
 
     const handleInputChange = (event) => {
@@ -15,12 +21,25 @@ const PostForm = ({ onClose }) => {
         });
     };
 
-    const handlePost = (e) => {
+    const handlePost = async (e) => {
         e.preventDefault();
-        // hasta el momento la info se muestra en consola luego le haré el post al back
-        console.log('Posting:', postData);
-          onClose(); 
-    };
+        try {
+          const response = await axios.post(`${URL_POSTS}`, postData); 
+          Swal.fire({
+            text: 'Post successfully!',
+            confirmButtonColor: '#FF7674',
+            customClass: {
+              content: 'sweetalert-content',
+              confirmButton: 'sweetalert-confirm-button',
+            },
+          });
+
+          console.log('Posted:', response.data);
+          onClose();
+        } catch (error) {
+          console.error('Error posting:', error);
+        }
+      };
 
     return (
         <div className='postFormOverlay'>
@@ -31,16 +50,16 @@ const PostForm = ({ onClose }) => {
                     </div>
                     <textarea
                         className="postForm__textarea"
-                        name="text"
-                        value={postData.text}
+                        name="caption"
+                        value={postData.caption}
                         onChange={handleInputChange}
                         placeholder="Share your moments..."
                     ></textarea>
                     <input
                         className="postForm__input"
-                        type="text"
-                        name="url"
-                        value={postData.url}
+                        type="url"
+                        name="content"  
+                        value={postData.content} //
                         onChange={handleInputChange}
                         accept="image/*, video/*"
                         placeholder="Share your url"

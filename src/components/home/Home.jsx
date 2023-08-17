@@ -29,6 +29,11 @@ const Home = () => {
                     usersData[post.userId] = userData;
                 }
             }
+
+            if (usersData[userId]) {
+                delete usersData[userId];
+            }
+            
             setUsers(usersData);
         };
         fetchData();

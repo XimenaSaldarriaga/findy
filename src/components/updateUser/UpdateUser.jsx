@@ -27,7 +27,7 @@ const UpdateUsers = ({ onClose }) => {
   const onSubmit = async (data) => {
     try {
       await axios.put(`${URL_USERS}/${userId}`, data);
-
+      
       Swal.fire({
         text: 'Data updated successfully!',
         confirmButtonColor: '#FF7674',
