@@ -15,7 +15,7 @@ body {
     flex-direction: column;
     justify-content: center;
     gap: 1rem;
-    margin: 20px 40px 0px 0px;
+    margin: 50px 450px;
 
     &__header {
         margin-left: 20px;
@@ -157,4 +157,11 @@ body {
     }
 
 
+}
+
+@media (max-width:1200px) {
+
+    .home {
+        margin: 150px 40px 0px 0px;
+    }
 }
