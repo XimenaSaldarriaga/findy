@@ -191,7 +191,7 @@ const Profile = () => {
               <div className='profile__album' >
                 {displayMode === 'album' &&
                   userPost.map(post => (
-                    <div key={post.id} className='profile__photoAlbum' onClick={() => goToPostUser(post.id)}>
+                    <div key={post.id} className='profile__divAlbum' onClick={() => goToPostUser(post.id)}>
                       {isYouTubeLink(post.content) ? (
                         <iframe
                           className='profile__videoAlbum'
@@ -201,7 +201,7 @@ const Profile = () => {
                           allowFullScreen
                         />
                       ) : (
-                        <img className='profile__photo' src={post.content} alt={post.caption} />
+                        <img className='profile__photoAlbum' src={post.content} alt={post.caption} />
                       )}
                     </div>
                   ))}

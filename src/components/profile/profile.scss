@@ -120,7 +120,6 @@ body {
 
     &__photodiv {
         width: 100%;
-        height: 70%;
         display: flex;
         flex-wrap: wrap;
         gap: 20px;
@@ -132,29 +131,54 @@ body {
         width: calc(50% - 10px);
         object-fit: cover;
         border-radius: 10px;
+        height: 70%;
+    }
+
+    &__videoContainer {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        align-items: flex-start;
+        margin-bottom: 60px;
     }
 
     &__video {
         width: calc(50% - 10px);
         object-fit: cover;
         border-radius: 10px;
+        height: 70%;
     }
 
     &__album {
-        width: 100%;
         display: flex;
+        justify-content: space-between;
         flex-wrap: wrap;
-        gap: 20px;
-        margin-bottom: 60px;
+        padding: 10px;
+        margin-bottom: 20px;
+    }
+
+    &__divAlbum {
+        width: calc(50% - 10px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     &__photoAlbum {
-        width: calc(50% - 10px);
+        width: 100%;
+        border-radius: 10px;
+        height: 70%;
+        object-fit: cover;
     }
 
     &__videoAlbum {
-        width: calc(50% - 10px);
+        width: 100%;
+        border-radius: 10px;
+        height: 70%;
+        object-fit: cover;
     }
+
 
     &__dots {
         width: 20px;
