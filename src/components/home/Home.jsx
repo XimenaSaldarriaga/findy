@@ -7,6 +7,7 @@ import comment from '../../assets/comment.png'
 import send from '../../assets/send.png'
 import save from '../../assets/save.png'
 import { fetchUserData, URL_POSTS } from '../../services/data'
+import { useNavigate } from 'react-router-dom'
 
 
 const Home = () => {
@@ -14,6 +15,7 @@ const Home = () => {
     const userId = localStorage.getItem('userId');
     const [posts, setPosts] = useState([]);
     const [users, setUsers] = useState({});
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -33,11 +35,15 @@ const Home = () => {
             if (usersData[userId]) {
                 delete usersData[userId];
             }
-            
+
             setUsers(usersData);
         };
         fetchData();
     }, [userId]);
+
+    const goToPostUser = (postId) => {
+        navigate(`/post/${postId}`);
+    }
 
     return (
         <div className='home'>
@@ -79,20 +85,20 @@ const Home = () => {
                             </div>
                             <span className='home__span'>{users[post.userId]?.username}</span>
                         </div>
-
-                        {post.content.includes('youtube') ? (
-                            <iframe
-                                className='home__postImagen'
-                                src={post.content}
-                                title='YouTube Video'
-                            />
-                        ) : (
-                            <img className='home__postImagen' src={post.content} alt='' />
-                        )}
-                        <div>
-
-
-                            <div className='home__postOptions'>
+                        <div className='home__postContainer'
+                            onClick={() => goToPostUser(post.id)}
+                        >
+                            {post.content.includes('youtube') ? (
+                                <iframe
+                                    className='home__postImagen'
+                                    src={post.content}
+                                    title='YouTube Video'
+                                />
+                            ) : (
+                                <img className='home__postImagen' src={post.content} alt='' />
+                            )}
+                        </div>
+                        <div>                            <div className='home__postOptions'>
                                 <div className='home__options'>
                                     <div className='home__option'>
                                         <img src={heart} alt="" />
