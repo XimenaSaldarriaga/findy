@@ -9,6 +9,7 @@ body {
 
     font-family: 'Balsamiq Sans', cursive;
     color: #2F2F2F;
+    margin: 0px 450px;
 
     &__image {
         display: flex;
@@ -232,5 +233,12 @@ body {
     &__icons {
         width: 15px;
         height: 15px;
+    }
+}
+
+@media (max-width:1200px) {
+
+    .profile {
+        margin: 0;
     }
 }
