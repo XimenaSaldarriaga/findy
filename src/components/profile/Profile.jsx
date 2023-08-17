@@ -31,6 +31,11 @@ const Profile = () => {
     setShowUpdateForm(false);
   };
 
+  const goToPostUser = (postId) => {
+    navigate(`/post/${postId}`);
+  }
+
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -162,27 +167,31 @@ const Profile = () => {
                   userPost
                     .filter(post => !isYouTubeLink(post.content))
                     .map(post => (
-                      <img className='profile__photo' src={post.content} alt={post.caption} key={post.id} />
+                      <img className='profile__photo' src={post.content} alt={post.caption} key={post.id} onClick={() => goToPostUser(post.id)} />
                     ))}
                 {displayMode === 'videos' &&
                   userPost
                     .filter(post => isYouTubeLink(post.content))
                     .map(post => (
-                      <iframe
-                        key={post.id} className='profile__video'
-                        title={post.caption}
-                        src={`https://www.youtube.com/embed/${getVideoIdFromUrl(post.content)}`}
-                        frameBorder='0'
-                        allowFullScreen
-
-                      />
-
+                      <div
+                        key={post.id}
+                        className='profile__videoContainer'
+                        onClick={() => goToPostUser(post.id)} 
+                      >
+                        <iframe
+                          className='profile__video'
+                          title={post.caption}
+                          src={`https://www.youtube.com/embed/${getVideoIdFromUrl(post.content)}`}
+                          frameBorder='0'
+                          allowFullScreen
+                        />
+                      </div>
                     ))}
               </div>
-              <div className='profile__album'>
+              <div className='profile__album' >
                 {displayMode === 'album' &&
                   userPost.map(post => (
-                    <div key={post.id} className='profile__photoAlbum'>
+                    <div key={post.id} className='profile__photoAlbum' onClick={() => goToPostUser(post.id)}>
                       {isYouTubeLink(post.content) ? (
                         <iframe
                           className='profile__videoAlbum'
