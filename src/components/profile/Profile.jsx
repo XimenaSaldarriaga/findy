@@ -64,6 +64,7 @@ const Profile = () => {
   const handleLogout = () => {
     dispatch({ type: 'LOGOUT' });
     localStorage.removeItem('userId');
+    localStorage.removeItem('authenticated');
     navigate('/');
   };
 
