@@ -134,6 +134,7 @@ body {
         height: 100%;
         border-radius: 10px;
         object-fit: cover;
+        cursor: pointer;
     }
 
     &__options {
@@ -144,6 +145,11 @@ body {
     &__option {
         font-size: 12px;
         line-height: 0;
+        cursor: pointer;
+    }
+
+    &__iconLike {
+        width: 29px;
     }
 
     &__postOptions {
@@ -188,11 +194,6 @@ body {
     }
 
 }
-
-.home__option.liked svg path {
-    fill:#FF7674;
-  }
-
 
 @media (max-width:1200px) {
 
