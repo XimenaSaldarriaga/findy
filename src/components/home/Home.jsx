@@ -128,6 +128,50 @@ const Home = () => {
         }
     };
 
+    const handleSavePost = async (postId) => {
+        try {
+            const responseLoggedInUser = await axios.get(`${URL_USERS}/${userId}`);
+            const loggedInUser = responseLoggedInUser.data;
+    
+            if (!loggedInUser.saved.includes(postId)) {
+                const updatedLoggedInUser = {
+                    ...loggedInUser,
+                    saved: [...loggedInUser.saved, postId],
+                };
+    
+                await axios.patch(`${URL_USERS}/${userId}`, updatedLoggedInUser);
+                const responseSavedPost = await axios.get(`${URL_POSTS}/${postId}`);
+                const savedPost = responseSavedPost.data;
+                const updatedSavedPost = {
+                    ...savedPost,
+                    savedCount: savedPost.savedCount + 1,
+                };
+                await axios.patch(`${URL_POSTS}/${postId}`, updatedSavedPost);
+    
+                Swal.fire({
+                    text: 'Post saved successfully!',
+                    confirmButtonColor: '#FF7674',
+                    customClass: {
+                        content: 'sweetalert-content',
+                        confirmButton: 'sweetalert-confirm-button',
+                    },
+                });
+            } else {
+                Swal.fire({
+                    text: 'Post is already saved!',
+                    confirmButtonColor: '#FF7674',
+                    customClass: {
+                        content: 'sweetalert-content',
+                        confirmButton: 'sweetalert-confirm-button',
+                    },
+                });
+            }
+        } catch (error) {
+            console.error('Error saving post:', error);
+        }
+    };
+
+
 
     return (
         <div className='home'>
@@ -217,7 +261,7 @@ const Home = () => {
                                 </div>
                             </div>
 
-                            <div><img src={save} alt="" /></div>
+                            <div onClick={() => handleSavePost(post.id)}><img src={save} alt="" /></div>
                         </div>
 
                             <div>
