@@ -2,7 +2,7 @@ import axios from 'axios';
 const URL_JSON_SERVER = "http://localhost:5000"
 export const URL_USERS = `${URL_JSON_SERVER}/users`;
 export const URL_POSTS = `${URL_JSON_SERVER}/posts`;
-const URL_COMMENTS = `${URL_JSON_SERVER}/comments`;
+export const URL_COMMENTS = `${URL_JSON_SERVER}/comments`;
 
 export const fetchUserData = async (userId) => {
   try {
@@ -26,9 +26,10 @@ export const fetchPostData = async (userId) => {
 };
 
 
-export const fetchCommentData = async (commentId) => {
+export const fetchCommentData = async (postId) => {
     try {
-        const response = await axios.get(`${URL_COMMENTS}/${commentId}`);
+        const response = await axios.get(`${URL_COMMENTS}/${postId}`);
+        console.log('Commets data:', response.data);
         return response.data;
     } catch (error) {
         console.log('Error obteniendo los comentarios del post', error);

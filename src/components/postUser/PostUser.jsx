@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import heart from '../../assets/heart.png';
 import comment from '../../assets/comment.png';
 import send from '../../assets/send.png';
 import white from '../../assets/arrow-white.png';
-import { URL_POSTS, URL_USERS } from '../../services/data'
+import { URL_POSTS, URL_USERS, URL_COMMENTS } from '../../services/data'
 import './postUser.scss'
 import { useAuth } from '../authContext';
+import Comments from '../comments/Comments';
 
 const PostUser = () => {
   const { postId } = useParams();
+  const postIdNumber = parseInt(postId);
+  const [comments, setComments] = useState([]);
   const [post, setPost] = useState(null);
   const [author, setAuthor] = useState(null);
   const [userAvatar, setUserAvatar] = useState(null);
@@ -24,21 +27,36 @@ const PostUser = () => {
         const postResponse = await axios.get(`${URL_POSTS}/${postId}`);
         const postData = postResponse.data;
         setPost(postData);
-
         console.log(postData);
 
         const userResponse = await axios.get(`${URL_USERS}/${postData.userId}`);
         const userData = userResponse.data;
         setAuthor(userData);
-
         console.log(userData);
-        const userAvatarResponse = await axios.get(`${URL_USERS}/${userId}`);
-        setUserAvatar(userAvatarResponse.data.avatar);
+
+        if (userId) {
+          const userAvatarResponse = await axios.get(`${URL_USERS}/${userId}`);
+          setUserAvatar(userAvatarResponse.data.avatar);
+        }
+
 
       } catch (error) {
         console.error('Error fetching post details:', error);
       }
     };
+
+    const fetchComments = async () => {
+      try {
+        const response = await axios.get(`${URL_COMMENTS}`);
+        const responseComments = response.data;
+        setComments(responseComments);
+        console.log('comments response', responseComments);
+      } catch (error) {
+        console.error('Error fetching comments:', error);
+      }
+    };
+
+    fetchComments();
 
     fetchPostDetails();
   }, [postId, userId]);
@@ -104,26 +122,33 @@ const PostUser = () => {
 
         <div className='post__paragraph'>
           <p>{post.caption}</p>
-        </div>
 
-        <div className='post__comment'>
-          {userId && (
-            <img className='post__commentUser' src={userAvatar} type="url" />
-          )}
-          <input
-            className='post__commentMessage'
-            type="text"
-            placeholder='Write comment as username...'
-          />
         </div>
+        <div className='post__userComments'>
 
+          <h2>Comments</h2>
+          {console.log('Filtered comments:', comments.filter((comment) => comment.postId === postIdNumber))}
+          {postIdNumber &&
+            comments &&
+            comments
+              .filter((comment) => comment.postId === postIdNumber)
+              .map((comment) => (
+                <Comments key={comment.id} comment={comment} />
+              ))}
+          <div className='post__comment'>
+            {userId && (
+              <img className='post__commentUser' src={userAvatar} type="url" />
+            )}
+            <input 
+              className='post__commentMessage'
+              type="text"
+              placeholder='Write comment as username...'
+            />
+          </div>
+        </div>
       </div>
-
-
-
     </div>
   )
 }
-
 
 export default PostUser; 
