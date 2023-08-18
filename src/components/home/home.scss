@@ -186,7 +186,13 @@ body {
         cursor: not-allowed;
         color: #FFF;
     }
+
 }
+
+.home__option.liked svg path {
+    fill:#FF7674; /* Change to the desired color */
+  }
+
 
 @media (max-width:1200px) {
 

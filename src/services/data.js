@@ -46,12 +46,29 @@ export const followUser = async (followerId, userIdToFollow) => {
   }
 };
 
-export const updatePostLikes = async (postId, newLikes) => {
+export const likePost = async (postId, userId) => {
   try {
-    const response = await axios.patch(`${URL_POSTS}/${postId}`, { likes: newLikes });
-    return response.data;
+    const response = await axios.get(URL_POSTS);
+    const postData = response.data;
+
+    const postIndex = postData.findIndex(post => post.id === postId);
+
+    if (postIndex !== -1) {
+      if (postData[postIndex].likedUsers.includes(userId)) {
+        postData[postIndex].likes--;
+        postData[postIndex].likedUsers = postData[postIndex].likedUsers.filter(likedUserId => likedUserId !== userId);
+      } else {
+        postData[postIndex].likes++;
+        postData[postIndex].likedUsers.push(userId);
+      }
+
+      await axios.put(`${URL_POSTS}/${postId}`, postData[postIndex]);
+      return postData[postIndex];
+    }
   } catch (error) {
-    console.error('Error al actualizar los likes del post', error);
+    console.error('Error updating post likes:', error);
     throw error;
   }
 };
+
+
