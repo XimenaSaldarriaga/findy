@@ -6,10 +6,10 @@ import messages from '../../assets/messages.png'
 import comment from '../../assets/comment.png'
 import send from '../../assets/send.png'
 import save from '../../assets/save.png'
-import { updatePostLikes, fetchUserData, URL_POSTS, URL_USERS } from '../../services/data'
+import { fetchUserData, URL_POSTS, URL_USERS } from '../../services/data'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-
+import Swal from 'sweetalert2'
 
 
 const Home = () => {
@@ -17,52 +17,39 @@ const Home = () => {
     const userId = localStorage.getItem('userId');
     const [posts, setPosts] = useState([]);
     const [users, setUsers] = useState({});
-    const [likedPosts, setLikedPosts] = useState([]);
+    const [followingUsers, setFollowingUsers] = useState([]);
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await fetch(URL_POSTS);
+            const postData = await response.json();
+            const filteredPosts = postData.filter(post => post.userId !== parseInt(userId));
+            setPosts(filteredPosts);
 
+            const usersData = {};
+            for (const post of filteredPosts) {
+                if (!usersData[post.userId]) {
+                    const userData = await fetchUserData(post.userId);
+                    usersData[post.userId] = userData;
+                }
+            }
 
-useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch(URL_POSTS);
-      const postData = await response.json();
-      const filteredPosts = postData.filter((post) => post.userId !== parseInt(userId));
-      setPosts(filteredPosts);
+            if (usersData[userId]) {
+                delete usersData[userId];
+            }
 
-      const usersData = {};
-      for (const post of filteredPosts) {
-        if (!usersData[post.userId]) {
-          const userData = await fetchUserData(post.userId);
-          usersData[post.userId] = userData;
-        }
-      }
-
-      if (usersData[userId]) {
-        delete usersData[userId];
-      }
-
-      setUsers(usersData);
-    };
-    fetchData();
-  }, [userId]);
-
-  const handleLike = async (postId) => {
-    const updatedPosts = posts.map((post) => {
-      if (post.id === postId) {
-        if (post.liked) {
-          return { ...post, liked: false, likes: post.likes - 1 };
-        } else {
-          return { ...post, liked: true, likes: post.likes + 1 };
-        }
-      }
-      return post;
-    });
-
-    setPosts(updatedPosts);
-
-    await updatePostLikes(postId, updatedPosts.find((post) => post.id === postId).likes);
-  };
-
+            setUsers(usersData);
+            try {
+                const responseLoggedInUser = await axios.get(`${URL_USERS}/${userId}`);
+                const loggedInUser = responseLoggedInUser.data;
+                setFollowingUsers(loggedInUser.following.map(user => user.id));
+            } catch (error) {
+                console.error('Error fetching following users:', error);
+            }
+        };
+        fetchData();
+    }, [userId]);
 
     const handleFollow = async (userIdToFollow, usernameToFollow) => {
         const loggedInUserId = localStorage.getItem('userId');
@@ -88,10 +75,18 @@ useEffect(() => {
                 };
                 await axios.patch(`${URL_USERS}/${userIdToFollow}`, updatedPostUser);
 
-                console.log(`Siguiendo a ${usernameToFollow} (ID: ${userIdToFollow})`);
             } else {
-                console.log('Ya sigues a este usuario');
+                Swal.fire({
+                    text: (`Siguiendo a ${usernameToFollow}`),
+                    confirmButtonColor: '#FF7674',
+                    customClass: {
+                        content: 'sweetalert-content',
+                        confirmButton: 'sweetalert-confirm-button',
+                    },
+                });
             }
+            setFollowingUsers([...followingUsers, userIdToFollow]);
+            await axios.patch(`${URL_USERS}/${loggedInUserId}`, updatedLoggedInUser);
         } catch (error) {
             console.error('Error:', error);
         }
@@ -140,7 +135,14 @@ useEffect(() => {
                                 <span className='home__span'>{users[post.userId]?.username}</span>
                             </div>
 
-                            <button onClick={() => handleFollow(users[post.userId]?.id, users[post.userId]?.username)}>Follow</button>
+                            <button
+                                onClick={() => handleFollow(users[post.userId]?.id, users[post.userId]?.username)}
+                                className={`button-follow ${followingUsers.includes(users[post.userId]?.id) ? 'following' : ''}`}
+                                disabled={followingUsers.includes(users[post.userId]?.id)}
+                            >
+                                {followingUsers.includes(users[post.userId]?.id) ? 'Following' : 'Follow'}
+                            </button>
+
                         </div>
                         <div className='home__postContainer'
                             onClick={() => goToPostUser(post.id)}
@@ -155,14 +157,10 @@ useEffect(() => {
                                 <img className='home__postImagen' src={post.content} alt='' />
                             )}
                         </div>
-                        <div> <div className='home__postOptions'>
+                        <div>                            <div className='home__postOptions'>
                             <div className='home__options'>
-
-                                <div
-                                    className={`home__option ${likedPosts.includes(post.id) ? 'liked' : ''}`}
-                                    onClick={() => handleLike(post.id)}
-                                >
-                                    <img src={heart} alt='' />
+                                <div className='home__option'>
+                                    <img src={heart} alt="" />
                                     <p>{post.likes}</p>
                                 </div>
                                 <div className='home__option'>

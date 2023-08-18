@@ -32,7 +32,7 @@ const Login = () => {
           customClass: {
             content: 'sweetalert-content',
             confirmButton: 'sweetalert-confirm-button',
-          },
+          }
         });
 
         navigate(`/home/${user.id}`);

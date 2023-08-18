@@ -107,25 +107,15 @@ body {
     &__postHeader {
         display: flex;
         justify-content: space-between;
-        
+
         font-size: 14px;
         font-weight: 700;
     }
-    &__input{
+
+    &__input {
         display: flex;
         align-items: center;
         gap: 10px;
-    }
-    button {
-        background-color: #FF7674;
-        font-family: 'Balsamiq Sans', cursive;
-        color: #FFF;
-        border: none;
-        outline: none;
-        padding: 3px 10px;
-        border-radius: 50px;
-        cursor: pointer;
-        justify-self: end;
     }
 
     &__postContainer {
@@ -171,11 +161,32 @@ body {
         font-size: 14px;
         font-weight: 700;
     }
-}
 
-.liked {
-    background-color: red;
-  }
+    .button-follow {
+        align-self: center;
+        height: 20px;
+        padding: 12px 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #FF7674;
+        font-family: 'Balsamiq Sans', cursive;
+        font-size: 12px;
+        color: #FFF;
+        border: none;
+        outline: none;
+        border-radius: 50px;
+        cursor: pointer;
+        justify-self: end;
+
+    }
+
+    .button-follow.following {
+        background-color: gray;
+        cursor: not-allowed;
+        color: #FFF;
+    }
+}
 
 @media (max-width:1200px) {
 
