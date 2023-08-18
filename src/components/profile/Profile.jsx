@@ -62,8 +62,6 @@ const Profile = () => {
       }
     };
 
-
-    
     const fetchData = async () => {
       try {
         const responseUserData = await axios.get(`${URL_USERS}/${userId}`);
@@ -76,12 +74,14 @@ const Profile = () => {
         console.error('Error fetching user data:', error);
       }
     };
+    
+    
 
 
     fetchUser();
     fetchPost();
     fetchData();
-  }, [userId, userData.saved]);
+  }, [userId]);
 
   const isYouTubeLink = (url) => url.includes("youtube.com");
   const getVideoIdFromUrl = (url) => {
@@ -215,16 +215,6 @@ const Profile = () => {
               </li>
               <li
                 onClick={() => {
-                  setDisplayMode('saved');
-                  setActiveIndex(4);
-                }}
-                className={activeIndex === 4 ? 'active' : ''}
-              >
-                Saved
-              </li>
-              <li
-                onClick={() => {
-                  setDisplayMode("tag");
                   setActiveIndex(3);
                 }}
                 className={activeIndex === 3 ? "active" : ""}
@@ -297,36 +287,8 @@ const Profile = () => {
                     </div>
                   ))}
               </div>
-              <div className="profile__tag">
-                {displayMode === "tag" &&
-                  userPost
-                    .filter((post) => post.tag.includes(parseInt(userId))) // Filtra las publicaciones en las que el usuario actual está etiquetado
-                    .map((post) => (
-                      <div
-                        key={post.id}
-                        className="profile__divTag"
-                        onClick={() => goToPostUser(post.id)}
-                      >
-                        {isYouTubeLink(post.content) ? (
-                          <iframe
-                            className="profile__videoTag"
-                            title={post.caption}
-                            src={`https://www.youtube.com/embed/${getVideoIdFromUrl(
-                              post.content
-                            )}`}
-                            frameBorder="0"
-                            allowFullScreen
-                          />
-                        ) : (
-                          <img
-                            className="profile__photoTag"
-                            src={post.content}
-                            alt={post.caption}
-                          />
-                        )}
-                      </div>
-                    ))}
-              </div>
+              
+
 
               <div className='profile__saved'>
                 {displayMode === 'saved' &&
