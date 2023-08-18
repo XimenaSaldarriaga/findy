@@ -6,7 +6,7 @@ import messages from '../../assets/messages.png'
 import comment from '../../assets/comment.png'
 import send from '../../assets/send.png'
 import save from '../../assets/save.png'
-import { fetchUserData, URL_POSTS, URL_USERS } from '../../services/data'
+import { likePost, fetchUserData, URL_POSTS, URL_USERS } from '../../services/data'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Swal from 'sweetalert2'
@@ -103,6 +103,34 @@ const Home = () => {
         navigate(`/post/${postId}`);
     }
 
+    const handleLike = async (postId) => {
+        try {
+          await likePost(postId, userId);
+      
+          // Update the state to reflect the change
+          setPosts(prevPosts => {
+            return prevPosts.map(post => {
+              if (post.id === postId) {
+                if (post.likedUsers.includes(userId)) {
+                  // User already liked, so remove their like
+                  post.likes--;
+                  post.likedUsers = post.likedUsers.filter(likedUserId => likedUserId !== userId);
+                } else {
+                  // User hasn't liked, so add their like
+                  post.likes++;
+                  post.likedUsers.push(userId);
+                }
+              }
+              return post;
+            });
+          });
+        } catch (error) {
+          console.error('Error liking post:', error);
+        }
+      };
+      
+;
+
     return (
         <div className='home'>
 
@@ -167,7 +195,10 @@ const Home = () => {
                         </div>
                         <div>                            <div className='home__postOptions'>
                             <div className='home__options'>
-                                <div className='home__option'>
+                                <div
+                                    onClick={() => handleLike(post.id)}
+                                    className={`home__option${post.likedUsers.includes(userId) ? 'liked' : ''}`}
+                                >
                                     <img src={heart} alt="" />
                                     <p>{post.likes}</p>
                                 </div>
