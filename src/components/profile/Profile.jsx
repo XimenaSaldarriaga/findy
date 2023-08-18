@@ -63,19 +63,7 @@ const Profile = () => {
     };
 
 
-    const fetchData = async () => {
-      try {
-        const responseUserData = await axios.get(`${URL_USERS}/${userId}`);
-        setUserData(responseUserData.data);
-
-        const responseSavedPosts = await axios.get(URL_POSTS);
-        const savedPostsData = responseSavedPosts.data.filter(post => userData.saved.includes(post.id));
-        setSavedPosts(savedPostsData);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-
+    
     const fetchData = async () => {
       try {
         const responseUserData = await axios.get(`${URL_USERS}/${userId}`);
