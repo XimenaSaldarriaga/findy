@@ -74,10 +74,18 @@ const Home = () => {
                     followers: [...postUser.followers, { id: loggedInUserId, username: loggedInUser.username }],
                 };
                 await axios.patch(`${URL_USERS}/${userIdToFollow}`, updatedPostUser);
+                Swal.fire({
+                    text: (`Siguiendo a ${usernameToFollow}`),
+                    confirmButtonColor: '#FF7674',
+                    customClass: {
+                        content: 'sweetalert-content',
+                        confirmButton: 'sweetalert-confirm-button',
+                    },
+                });
 
             } else {
                 Swal.fire({
-                    text: (`Siguiendo a ${usernameToFollow}`),
+                    text: (error),
                     confirmButtonColor: '#FF7674',
                     customClass: {
                         content: 'sweetalert-content',
