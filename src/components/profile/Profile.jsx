@@ -67,16 +67,16 @@ const Profile = () => {
 
     const fetchData = async () => {
       try {
-          const responseUserData = await axios.get(`${URL_USERS}/${userId}`);
-          setUserData(responseUserData.data);
+        const responseUserData = await axios.get(`${URL_USERS}/${userId}`);
+        setUserData(responseUserData.data);
 
-          const responseSavedPosts = await axios.get(URL_POSTS);
-          const savedPostsData = responseSavedPosts.data.filter(post => userData.saved.includes(post.id));
-          setSavedPosts(savedPostsData);
+        const responseSavedPosts = await axios.get(URL_POSTS);
+        const savedPostsData = responseSavedPosts.data.filter(post => userData.saved.includes(post.id));
+        setSavedPosts(savedPostsData);
       } catch (error) {
-          console.error('Error fetching user data:', error);
+        console.error('Error fetching user data:', error);
       }
-  };
+    };
 
 
     fetchUser();
@@ -179,10 +179,10 @@ const Profile = () => {
               </li>
               <li
                 onClick={() => {
-                  setDisplayMode('saved'); 
-                  setActiveIndex(4); 
+                  setDisplayMode('saved');
+                  setActiveIndex(4);
                 }}
-                className={activeIndex === 4 ? 'active' : ''} 
+                className={activeIndex === 4 ? 'active' : ''}
               >
                 Saved
               </li>
@@ -261,21 +261,28 @@ const Profile = () => {
                     </div>
                   ))}
               </div>
+
               <div className='profile__saved'>
-                    {savedPosts.map(post => (
-                        <div key={post.id} className='profile__saved-post'>
-                            {post.content.includes('youtube') ? (
-                                <iframe
-                                    className='profile__saved-video'
-                                    src={post.content}
-                                    title='YouTube Video'
-                                />
-                            ) : (
-                                <img className='profile__saved-image' src={post.content} alt='Saved Post' />
-                            )}
-                        </div>
-                    ))}
-                </div>
+                {displayMode === 'saved' &&
+                  savedPosts.map(post => (
+                    <div
+                      key={post.id}
+                      className='profile__saved-post'
+                      onClick={() => goToPostUser(post.id)}
+                    >
+                      {post.content.includes('youtube') ? (
+                        <iframe
+                          className='profile__saved-video'
+                          src={post.content}
+                          title='YouTube Video'
+                        />
+                      ) : (
+                        <img className='profile__saved-image' src={post.content} alt='Saved Post' />
+                      )}
+                    </div>
+                  ))}
+              </div>
+
             </div>
           </div>
           {showUpdateForm && <UpdateUsers onClose={closeUpdateForm} />}
