@@ -78,6 +78,13 @@ body {
         justify-content: space-around;
     }
 
+    &__closeButton {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+
     &__buttons button {
         width: 190px;
         height: 35px;

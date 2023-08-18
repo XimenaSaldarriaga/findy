@@ -36,6 +36,10 @@ const Profile = () => {
     navigate(`/post/${postId}`);
   }
 
+  const toggleSidebar = () => {
+    setShowSidebar(!showSidebar);
+  };
+
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -89,7 +93,8 @@ const Profile = () => {
 
           {showSidebar && !showUpdateForm && (
             <div className='profile__sidebar'>
-              <button onClick={toggleUpdateForm}> <img className='profile__icons' src={edit} alt="" />Edit Profile</button>
+              <button className='profile__closeButton' onClick={toggleSidebar}>X</button>
+              <button  onClick={toggleUpdateForm}> <img className='profile__icons' src={edit} alt="" />Edit Profile</button>
               <button onClick={handleLogout}> <img className='profile__icons' src={logout} alt="" />Logout</button>
             </div>
           )}
