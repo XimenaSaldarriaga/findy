@@ -107,25 +107,15 @@ body {
     &__postHeader {
         display: flex;
         justify-content: space-between;
-        
+
         font-size: 14px;
         font-weight: 700;
     }
-    &__input{
+
+    &__input {
         display: flex;
         align-items: center;
         gap: 10px;
-    }
-    button {
-        background-color: #FF7674;
-        font-family: 'Balsamiq Sans', cursive;
-        color: #FFF;
-        border: none;
-        outline: none;
-        padding: 3px 10px;
-        border-radius: 50px;
-        cursor: pointer;
-        justify-self: end;
     }
 
     &__postContainer {
@@ -172,7 +162,24 @@ body {
         font-weight: 700;
     }
 
+    .button-follow {
+        background-color: #FF7674;
+        font-family: 'Balsamiq Sans', cursive;
+        color: #FFF;
+        border: none;
+        outline: none;
+        padding: 3px 12px;
+        border-radius: 50px;
+        cursor: pointer;
+        justify-self: end;
 
+    }
+
+    .button-follow.following {
+        background-color: gray;
+        cursor: not-allowed;
+        color: #FFF;
+    }
 }
 
 @media (max-width:1200px) {
