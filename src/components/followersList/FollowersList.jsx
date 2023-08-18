@@ -3,19 +3,19 @@ import './followersList.scss';
 
 const FollowersList = ({ followers, onClose }) => {
     return (
-    <div className='followersOverlay'>
+        <div className='followersOverlay'>
             <div className='followers'>
                 <h2>Followers</h2>
                 <ul>
-                {followers.map(follower => (
-                    <li key={follower.id}>{follower.username}</li>
-                ))}
+                    {followers.map(follower => (
+                        <li key={follower.id}>{follower.username}</li>
+                    ))}
                 </ul>
-                <button onClick={onClose}>Close</button>
+                <button onClick={onClose}>x</button>
             </div>
-    </div>
+        </div>
     );
-  };
-  
+};
+
 export default FollowersList;
 

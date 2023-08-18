@@ -134,6 +134,7 @@ body {
         height: 100%;
         border-radius: 10px;
         object-fit: cover;
+        cursor: pointer;
     }
 
     &__options {
@@ -144,6 +145,7 @@ body {
     &__option {
         font-size: 12px;
         line-height: 0;
+        cursor: pointer;
     }
 
     &__postOptions {
@@ -151,7 +153,7 @@ body {
         display: flex;
         justify-content: space-between;
     }
-
+    
     &__footerPost {
         font-size: 12px;
         line-height: 18px;

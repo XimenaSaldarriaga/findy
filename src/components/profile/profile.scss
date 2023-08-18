@@ -57,6 +57,10 @@ body {
         line-height: 0px;
     }
 
+    &__followers {
+        cursor: pointer;
+    }
+
     &__input {
         position: absolute;
         display: flex;
@@ -73,6 +77,13 @@ body {
         display: flex;
         justify-content: space-around;
     }
+
+    &__closeButton {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
 
     &__buttons button {
         width: 190px;
