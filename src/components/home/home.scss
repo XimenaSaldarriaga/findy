@@ -152,6 +152,16 @@ body {
         width: 29px;
     }
 
+    &__iconSaved {
+        width: 23px;
+        height: 24px;
+        cursor: pointer;
+    }
+
+    &__iconSave { 
+        cursor: pointer;
+    }
+
     &__postOptions {
         margin-top: 5px;
         display: flex;
