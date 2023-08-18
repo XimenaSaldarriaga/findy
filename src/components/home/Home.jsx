@@ -5,7 +5,8 @@ import heart from '../../assets/heart.png'
 import messages from '../../assets/messages.png'
 import comment from '../../assets/comment.png'
 import send from '../../assets/send.png'
-import save from '../../assets/save.png'
+import saved from '../../assets/save.png'
+import save from '../../assets/saved-white.png'
 import { likePost, fetchUserData, URL_POSTS, URL_USERS } from '../../services/data'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
@@ -21,6 +22,8 @@ const Home = () => {
     const [users, setUsers] = useState({});
     const [followingUsers, setFollowingUsers] = useState([]);
     const navigate = useNavigate();
+    const [savedPostIds, setSavedPostIds] = useState([]);
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -128,17 +131,18 @@ const Home = () => {
         }
     };
 
+
     const handleSavePost = async (postId) => {
         try {
             const responseLoggedInUser = await axios.get(`${URL_USERS}/${userId}`);
             const loggedInUser = responseLoggedInUser.data;
-    
+
             if (!loggedInUser.saved.includes(postId)) {
                 const updatedLoggedInUser = {
                     ...loggedInUser,
                     saved: [...loggedInUser.saved, postId],
                 };
-    
+
                 await axios.patch(`${URL_USERS}/${userId}`, updatedLoggedInUser);
                 const responseSavedPost = await axios.get(`${URL_POSTS}/${postId}`);
                 const savedPost = responseSavedPost.data;
@@ -147,7 +151,7 @@ const Home = () => {
                     savedCount: savedPost.savedCount + 1,
                 };
                 await axios.patch(`${URL_POSTS}/${postId}`, updatedSavedPost);
-    
+
                 Swal.fire({
                     text: 'Post saved successfully!',
                     confirmButtonColor: '#FF7674',
@@ -156,21 +160,38 @@ const Home = () => {
                         confirmButton: 'sweetalert-confirm-button',
                     },
                 });
+
+                setSavedPostIds([...savedPostIds, postId]);
             } else {
+                const updatedLoggedInUser = {
+                    ...loggedInUser,
+                    saved: loggedInUser.saved.filter(id => id !== postId),
+                };
+
+                await axios.patch(`${URL_USERS}/${userId}`, updatedLoggedInUser);
+                const responseSavedPost = await axios.get(`${URL_POSTS}/${postId}`);
+                const savedPost = responseSavedPost.data;
+                const updatedSavedPost = {
+                    ...savedPost,
+                    savedCount: Math.max(savedPost.savedCount - 1, 0),
+                };
+                await axios.patch(`${URL_POSTS}/${postId}`, updatedSavedPost);
+
                 Swal.fire({
-                    text: 'Post is already saved!',
+                    text: 'Post removed from saved!',
                     confirmButtonColor: '#FF7674',
                     customClass: {
                         content: 'sweetalert-content',
                         confirmButton: 'sweetalert-confirm-button',
                     },
                 });
+
+                setSavedPostIds(savedPostIds.filter(id => id !== postId));
             }
         } catch (error) {
             console.error('Error saving post:', error);
         }
     };
-
 
 
     return (
@@ -261,7 +282,13 @@ const Home = () => {
                                 </div>
                             </div>
 
-                            <div onClick={() => handleSavePost(post.id)}><img src={save} alt="" /></div>
+                            <div onClick={() => handleSavePost(post.id)}>
+                            {savedPostIds.includes(post.id) ? (
+                                <img className='home__iconSaved' src={saved} alt="Saved" />
+                            ) : (
+                                <img className='home__iconSaved' src={save} alt="Save" />
+                            )}
+                        </div>
                         </div>
 
                             <div>
