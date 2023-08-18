@@ -4,6 +4,7 @@ import axios from 'axios';
 import heart from '../../assets/heart.png';
 import comment from '../../assets/comment.png';
 import send from '../../assets/send.png';
+import like from '../../assets/like.png';
 import white from '../../assets/arrow-white.png';
 import { likePost, URL_POSTS, URL_USERS, URL_COMMENTS } from '../../services/data'
 import './postUser.scss'
@@ -124,8 +125,12 @@ const PostUser = () => {
 
           <div className='post__quantity'>
 
-          <div className='post__div' onClick={() => handleLikePost(post.id)}>
-              <img className='post__icons' src={heart} alt="" />
+            <div className='post__div' onClick={() => handleLikePost(post.id)}>
+              {post.likedUsers.includes(userId) ? (
+                <img className='post__icons' src={like} alt="Like" />
+              ) : (
+                <img className='post__icons' src={heart} alt="Heart" />
+              )}
               <p>{post.likes}K </p>
             </div>
             <div className='post__div'>
@@ -160,7 +165,7 @@ const PostUser = () => {
             {userId && (
               <img className='post__commentUser' src={userAvatar} type="url" />
             )}
-            <input 
+            <input
               className='post__commentMessage'
               type="text"
               placeholder='Write comment as username...'
