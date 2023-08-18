@@ -155,6 +155,11 @@ body {
     &__iconSaved {
         width: 23px;
         height: 24px;
+        cursor: pointer;
+    }
+
+    &__iconSave { 
+        cursor: pointer;
     }
 
     &__postOptions {
