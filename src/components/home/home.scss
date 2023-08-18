@@ -148,12 +148,16 @@ body {
         cursor: pointer;
     }
 
+    &__iconLike {
+        width: 27px;
+    }
+
     &__postOptions {
         margin-top: 5px;
         display: flex;
         justify-content: space-between;
     }
-    
+
     &__footerPost {
         font-size: 12px;
         line-height: 18px;
@@ -190,11 +194,6 @@ body {
     }
 
 }
-
-.home__option.liked svg path {
-    fill:#FF7674;
-  }
-
 
 @media (max-width:1200px) {
 
