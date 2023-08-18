@@ -4,8 +4,9 @@ import axios from 'axios';
 import heart from '../../assets/heart.png';
 import comment from '../../assets/comment.png';
 import send from '../../assets/send.png';
+import like from '../../assets/like.png';
 import white from '../../assets/arrow-white.png';
-import { URL_POSTS, URL_USERS, URL_COMMENTS } from '../../services/data'
+import { likePost, URL_POSTS, URL_USERS, URL_COMMENTS } from '../../services/data'
 import './postUser.scss'
 import { useAuth } from '../authContext';
 import Comments from '../comments/Comments';
@@ -76,6 +77,27 @@ const PostUser = () => {
     }
   };
 
+
+  const handleLikePost = async (postId) => {
+    try {
+      await likePost(postId, userId);
+      setPost(prevPost => {
+        if (prevPost.id === postId) {
+          if (prevPost.likedUsers.includes(userId)) {
+            prevPost.likes--;
+            prevPost.likedUsers = prevPost.likedUsers.filter(likedUserId => likedUserId !== userId);
+          } else {
+            prevPost.likes++;
+            prevPost.likedUsers.push(userId);
+          }
+        }
+        return { ...prevPost };
+      });
+    } catch (error) {
+      console.error('Error liking post:', error);
+    }
+  };
+
   return (
     <div className='post'>
       {isYouTubeLink(post.content) ? (
@@ -103,17 +125,21 @@ const PostUser = () => {
 
           <div className='post__quantity'>
 
-            <div className='post__div'>
-              <img className='post__icons' src={heart} alt="" />
-              <p>{post.likes}K </p>
+            <div className='post__div' onClick={() => handleLikePost(post.id)}>
+              {post.likedUsers.includes(userId) ? (
+                <img className='post__icons' src={like} alt="Like" />
+              ) : (
+                <img className='post__icons' src={heart} alt="Heart" />
+              )}
+              <p>{post.likes} K </p>
             </div>
             <div className='post__div'>
               <img className='post__icons' src={comment} alt="" />
-              <p>54K</p>
+              <p>54 K</p>
             </div>
             <div className='post__div'>
               <img className='post__icons' src={send} alt="" />
-              <p>2K</p>
+              <p>2 K</p>
             </div>
 
           </div>
@@ -139,7 +165,7 @@ const PostUser = () => {
             {userId && (
               <img className='post__commentUser' src={userAvatar} type="url" />
             )}
-            <input 
+            <input
               className='post__commentMessage'
               type="text"
               placeholder='Write comment as username...'
