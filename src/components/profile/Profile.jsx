@@ -96,7 +96,7 @@ const Profile = () => {
           <img className='profile__arrow' src={arrow} alt="" onClick={goToHome} />
           <div className='profile__info'>
             <div className='profile__likes'>
-              <div className='profile__option'>
+              <div className='profile__option profile__followers'>
                 <p className='profile__subtitle' onClick={() => setShowFollowersList(true)}> {currentUser.followers.length} M </p>
                 <p>Followers</p>
               </div>

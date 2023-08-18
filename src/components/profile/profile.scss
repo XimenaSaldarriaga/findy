@@ -57,6 +57,10 @@ body {
         line-height: 0px;
     }
 
+    &__followers {
+        cursor: pointer;
+    }
+
     &__input {
         position: absolute;
         display: flex;
