@@ -31,7 +31,7 @@ const Home = () => {
             const postData = await response.json();
             const filteredPosts = postData.filter(post => post.userId !== parseInt(userId));
             setPosts(filteredPosts);
-
+    
             const usersData = {};
             for (const post of filteredPosts) {
                 if (!usersData[post.userId]) {
@@ -39,22 +39,27 @@ const Home = () => {
                     usersData[post.userId] = userData;
                 }
             }
-
+    
             if (usersData[userId]) {
                 delete usersData[userId];
             }
-
+    
             setUsers(usersData);
+    
             try {
                 const responseLoggedInUser = await axios.get(`${URL_USERS}/${userId}`);
                 const loggedInUser = responseLoggedInUser.data;
                 setFollowingUsers(loggedInUser.following.map(user => user.id));
+    
+                const savedPostIdsFromLocalStorage = JSON.parse(localStorage.getItem('savedPostIds')) || [];
+                setSavedPostIds(savedPostIdsFromLocalStorage);
             } catch (error) {
                 console.error('Error fetching following users:', error);
             }
         };
         fetchData();
     }, [userId]);
+    
 
     const handleFollow = async (userIdToFollow, usernameToFollow) => {
         const loggedInUserId = localStorage.getItem('userId');
@@ -131,18 +136,17 @@ const Home = () => {
         }
     };
 
-
     const handleSavePost = async (postId) => {
         try {
             const responseLoggedInUser = await axios.get(`${URL_USERS}/${userId}`);
             const loggedInUser = responseLoggedInUser.data;
-
+    
             if (!loggedInUser.saved.includes(postId)) {
                 const updatedLoggedInUser = {
                     ...loggedInUser,
                     saved: [...loggedInUser.saved, postId],
                 };
-
+    
                 await axios.patch(`${URL_USERS}/${userId}`, updatedLoggedInUser);
                 const responseSavedPost = await axios.get(`${URL_POSTS}/${postId}`);
                 const savedPost = responseSavedPost.data;
@@ -151,7 +155,7 @@ const Home = () => {
                     savedCount: savedPost.savedCount + 1,
                 };
                 await axios.patch(`${URL_POSTS}/${postId}`, updatedSavedPost);
-
+    
                 Swal.fire({
                     text: 'Post saved successfully!',
                     confirmButtonColor: '#FF7674',
@@ -160,14 +164,14 @@ const Home = () => {
                         confirmButton: 'sweetalert-confirm-button',
                     },
                 });
-
+    
                 setSavedPostIds([...savedPostIds, postId]);
             } else {
                 const updatedLoggedInUser = {
                     ...loggedInUser,
                     saved: loggedInUser.saved.filter(id => id !== postId),
                 };
-
+    
                 await axios.patch(`${URL_USERS}/${userId}`, updatedLoggedInUser);
                 const responseSavedPost = await axios.get(`${URL_POSTS}/${postId}`);
                 const savedPost = responseSavedPost.data;
@@ -176,7 +180,7 @@ const Home = () => {
                     savedCount: Math.max(savedPost.savedCount - 1, 0),
                 };
                 await axios.patch(`${URL_POSTS}/${postId}`, updatedSavedPost);
-
+    
                 Swal.fire({
                     text: 'Post removed from saved!',
                     confirmButtonColor: '#FF7674',
@@ -185,13 +189,21 @@ const Home = () => {
                         confirmButton: 'sweetalert-confirm-button',
                     },
                 });
-
+    
                 setSavedPostIds(savedPostIds.filter(id => id !== postId));
             }
+
+            const updatedSavedPostIds = savedPostIds.includes(postId)
+            ? savedPostIds.filter(id => id !== postId)
+            : [...savedPostIds, postId];
+        setSavedPostIds(updatedSavedPostIds);
+
+        localStorage.setItem('savedPostIds', JSON.stringify(updatedSavedPostIds));
         } catch (error) {
             console.error('Error saving post:', error);
         }
     };
+    
 
 
     return (
@@ -283,12 +295,12 @@ const Home = () => {
                             </div>
 
                             <div onClick={() => handleSavePost(post.id)}>
-                            {savedPostIds.includes(post.id) ? (
-                                <img className='home__iconSaved' src={saved} alt="Saved" />
-                            ) : (
-                                <img className='home__iconSaved' src={save} alt="Save" />
-                            )}
-                        </div>
+                                {savedPostIds.includes(post.id) ? (
+                                    <img src={saved} alt="Saved" />
+                                ) : (
+                                    <img className='home__iconSaved' src={save} alt="Save" />
+                                )}
+                            </div>
                         </div>
 
                             <div>
