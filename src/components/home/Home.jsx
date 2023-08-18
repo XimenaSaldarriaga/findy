@@ -87,7 +87,7 @@ const Home = () => {
                 };
                 await axios.patch(`${URL_USERS}/${userIdToFollow}`, updatedPostUser);
                 Swal.fire({
-                    text: (`Siguiendo a ${usernameToFollow}`),
+                    text: (`Following ${usernameToFollow}`),
                     confirmButtonColor: '#FF7674',
                     customClass: {
                         content: 'sweetalert-content',

@@ -155,6 +155,7 @@ const Profile = () => {
               </li>
               <li
                 onClick={() => {
+                  setDisplayMode('tag');
                   setActiveIndex(3);
                 }}
                 className={activeIndex === 3 ? 'active' : ''}
@@ -205,6 +206,24 @@ const Profile = () => {
                         />
                       ) : (
                         <img className='profile__photoAlbum' src={post.content} alt={post.caption} />
+                      )}
+                    </div>
+                  ))}
+              </div>
+              <div className='profile__tag' >
+                {displayMode === 'tag' &&
+                  userPost.map(post => (
+                    <div key={post.id} className='profile__divTag' onClick={() => goToPostUser(post.id)}>
+                      {isYouTubeLink(post.content) ? (
+                        <iframe
+                          className='profile__videoTag'
+                          title={post.caption}
+                          src={`https://www.youtube.com/embed/${getVideoIdFromUrl(post.content)}`}
+                          frameBorder='0'
+                          allowFullScreen
+                        />
+                      ) : (
+                        <img className='profile__photoTag' src={post.content} alt={post.caption} />
                       )}
                     </div>
                   ))}

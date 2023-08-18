@@ -186,7 +186,34 @@ body {
         height: 90%;
         object-fit: cover;
     }
+    &__tag {
+        height: 100%;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        padding: 10px;
+    }
 
+    &__divTag {
+        width: calc(50% - 10px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__photoTag {
+        width: 100%;
+        border-radius: 10px;
+        height: 90%;
+        object-fit: cover;
+    }
+
+    &__videoTag {
+        width: 100%;
+        border-radius: 10px;
+        height: 90%;
+        object-fit: cover;
+    }
 
     &__dots {
         width: 20px;
