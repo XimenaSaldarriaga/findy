@@ -296,7 +296,7 @@ const Home = () => {
 
                             <div onClick={() => handleSavePost(post.id)}>
                                 {savedPostIds.includes(post.id) ? (
-                                    <img src={saved} alt="Saved" />
+                                    <img className='home__iconSave' src={saved} alt="Saved" />
                                 ) : (
                                     <img className='home__iconSaved' src={save} alt="Save" />
                                 )}
