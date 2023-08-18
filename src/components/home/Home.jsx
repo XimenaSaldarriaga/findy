@@ -105,31 +105,28 @@ const Home = () => {
 
     const handleLike = async (postId) => {
         try {
-          await likePost(postId, userId);
-      
-          // Update the state to reflect the change
-          setPosts(prevPosts => {
-            return prevPosts.map(post => {
-              if (post.id === postId) {
-                if (post.likedUsers.includes(userId)) {
-                  // User already liked, so remove their like
-                  post.likes--;
-                  post.likedUsers = post.likedUsers.filter(likedUserId => likedUserId !== userId);
-                } else {
-                  // User hasn't liked, so add their like
-                  post.likes++;
-                  post.likedUsers.push(userId);
-                }
-              }
-              return post;
+            await likePost(postId, userId);
+
+            setPosts(prevPosts => {
+                return prevPosts.map(post => {
+                    if (post.id === postId) {
+                        if (post.likedUsers.includes(userId)) {
+                            post.likes--;
+                            post.likedUsers = post.likedUsers.filter(likedUserId => likedUserId !== userId);
+                        } else {
+                            post.likes++;
+                            post.likedUsers.push(userId);
+                        }
+                    }
+                    return post;
+                });
             });
-          });
         } catch (error) {
-          console.error('Error liking post:', error);
+            console.error('Error liking post:', error);
         }
-      };
-      
-;
+    };
+
+    ;
 
     return (
         <div className='home'>
@@ -197,9 +194,9 @@ const Home = () => {
                             <div className='home__options'>
                                 <div
                                     onClick={() => handleLike(post.id)}
-                                    className={`home__option${post.likedUsers.includes(userId) ? 'liked' : ''}`}
+                                    className="home__option"
                                 >
-                                    <img src={heart} alt="" />
+                                        <img className={post.likedUsers.includes(userId) ? 'liked' : ''} src={heart} alt="" />
                                     <p>{post.likes}</p>
                                 </div>
                                 <div className='home__option'>

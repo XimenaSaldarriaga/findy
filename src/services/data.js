@@ -48,29 +48,21 @@ export const followUser = async (followerId, userIdToFollow) => {
 
 export const likePost = async (postId, userId) => {
   try {
-    // Fetch the posts data
     const response = await axios.get(URL_POSTS);
     const postData = response.data;
 
-    // Find the post by its ID
     const postIndex = postData.findIndex(post => post.id === postId);
 
     if (postIndex !== -1) {
-      // Check if the user already liked the post
       if (postData[postIndex].likedUsers.includes(userId)) {
-        // User already liked, so remove their like
         postData[postIndex].likes--;
         postData[postIndex].likedUsers = postData[postIndex].likedUsers.filter(likedUserId => likedUserId !== userId);
       } else {
-        // User hasn't liked, so add their like
         postData[postIndex].likes++;
         postData[postIndex].likedUsers.push(userId);
       }
 
-      // Update the posts data
       await axios.put(`${URL_POSTS}/${postId}`, postData[postIndex]);
-
-      // Return updated post data
       return postData[postIndex];
     }
   } catch (error) {
