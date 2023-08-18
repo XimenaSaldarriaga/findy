@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './profile.scss';
 import { useAuth } from '../authContext';
-import { fetchPostData, fetchUserData } from '../../services/data';
+import { fetchPostData, fetchUserData, URL_USERS, URL_POSTS } from '../../services/data';
 import dots from '../../assets/dots.png';
 import arrow from '../../assets/arrow.png';
 import edit from '../../assets/edit.png';
@@ -9,6 +9,7 @@ import logout from '../../assets/logout.png';
 import { useNavigate } from 'react-router-dom';
 import UpdateUsers from '../updateUser/UpdateUser';
 import FollowersList from '../followersList/FollowersList';
+import axios from 'axios';
 
 
 const Profile = () => {
@@ -22,6 +23,8 @@ const Profile = () => {
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState(0);
+  const [userData, setUserData] = useState({});
+  const [savedPosts, setSavedPosts] = useState([]);
 
   const toggleUpdateForm = () => {
     setShowUpdateForm(!showUpdateForm);
@@ -61,9 +64,25 @@ const Profile = () => {
       }
     };
 
+
+    const fetchData = async () => {
+      try {
+          const responseUserData = await axios.get(`${URL_USERS}/${userId}`);
+          setUserData(responseUserData.data);
+
+          const responseSavedPosts = await axios.get(URL_POSTS);
+          const savedPostsData = responseSavedPosts.data.filter(post => userData.saved.includes(post.id));
+          setSavedPosts(savedPostsData);
+      } catch (error) {
+          console.error('Error fetching user data:', error);
+      }
+  };
+
+
     fetchUser();
     fetchPost();
-  }, [userId]);
+    fetchData();
+  }, [userId, userData.saved]);
 
   const isYouTubeLink = (url) => url.includes('youtube.com');
   const getVideoIdFromUrl = (url) => {
@@ -242,6 +261,21 @@ const Profile = () => {
                     </div>
                   ))}
               </div>
+              <div className='profile__saved'>
+                    {savedPosts.map(post => (
+                        <div key={post.id} className='profile__saved-post'>
+                            {post.content.includes('youtube') ? (
+                                <iframe
+                                    className='profile__saved-video'
+                                    src={post.content}
+                                    title='YouTube Video'
+                                />
+                            ) : (
+                                <img className='profile__saved-image' src={post.content} alt='Saved Post' />
+                            )}
+                        </div>
+                    ))}
+                </div>
             </div>
           </div>
           {showUpdateForm && <UpdateUsers onClose={closeUpdateForm} />}
