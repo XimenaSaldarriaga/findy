@@ -44,3 +44,13 @@ export const followUser = async (followerId, userIdToFollow) => {
       throw error;
   }
 };
+
+export const updatePostLikes = async (postId, newLikes) => {
+  try {
+    const response = await axios.patch(`${URL_POSTS}/${postId}`, { likes: newLikes });
+    return response.data;
+  } catch (error) {
+    console.error('Error al actualizar los likes del post', error);
+    throw error;
+  }
+};
