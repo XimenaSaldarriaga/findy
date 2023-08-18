@@ -27,7 +27,7 @@ const Login = () => {
         localStorage.setItem('authenticated', 'true');
 
         Swal.fire({
-          text: '¡Welcome!',
+          text: (`Welcome back ${user.name}!`),
           confirmButtonColor: '#FF7674',
           customClass: {
             content: 'sweetalert-content',
@@ -38,7 +38,7 @@ const Login = () => {
         navigate(`/home/${user.id}`);
       } else {
         Swal.fire({
-          text: '¡Los datos ingresados son incorrectos!',
+          text: 'The information does not match!',
           confirmButtonColor: '#FF7674',
           customClass: {
             content: 'sweetalert-content',
