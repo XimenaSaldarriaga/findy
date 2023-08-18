@@ -131,15 +131,15 @@ const PostUser = () => {
               ) : (
                 <img className='post__icons' src={heart} alt="Heart" />
               )}
-              <p>{post.likes}K </p>
+              <p>{post.likes} K </p>
             </div>
             <div className='post__div'>
               <img className='post__icons' src={comment} alt="" />
-              <p>54K</p>
+              <p>54 K</p>
             </div>
             <div className='post__div'>
               <img className='post__icons' src={send} alt="" />
-              <p>2K</p>
+              <p>2 K</p>
             </div>
 
           </div>

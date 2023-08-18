@@ -204,16 +204,16 @@ const Home = () => {
                                             <img className='home__iconLike' src={heart} alt="Heart" />
                                         )}
                                     </span>
-                                    <p>{post.likes}</p>
+                                    <p>{post.likes} K</p>
                                 </div>
 
                                 <div className='home__option'>
                                     <img src={comment} alt="" />
-                                    <p>87K</p>
+                                    <p>87 K</p>
                                 </div>
                                 <div className='home__option'>
                                     <img src={send} alt="" />
-                                    <p>10K</p>
+                                    <p>10 K</p>
                                 </div>
                             </div>
 
