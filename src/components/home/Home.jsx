@@ -9,6 +9,7 @@ import save from '../../assets/save.png'
 import { fetchUserData, URL_POSTS, URL_USERS } from '../../services/data'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 
 const Home = () => {
@@ -16,6 +17,7 @@ const Home = () => {
     const userId = localStorage.getItem('userId');
     const [posts, setPosts] = useState([]);
     const [users, setUsers] = useState({});
+    const [followingUsers, setFollowingUsers] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -38,38 +40,53 @@ const Home = () => {
             }
 
             setUsers(usersData);
+            try {
+                const responseLoggedInUser = await axios.get(`${URL_USERS}/${userId}`);
+                const loggedInUser = responseLoggedInUser.data;
+                setFollowingUsers(loggedInUser.following.map(user => user.id));
+            } catch (error) {
+                console.error('Error fetching following users:', error);
+            }
         };
         fetchData();
     }, [userId]);
 
     const handleFollow = async (userIdToFollow, usernameToFollow) => {
         const loggedInUserId = localStorage.getItem('userId');
-    
+
         try {
             const responsePostUser = await axios.get(`${URL_USERS}/${userIdToFollow}`);
             const postUser = responsePostUser.data;
             const responseLoggedInUser = await axios.get(`${URL_USERS}/${loggedInUserId}`);
             const loggedInUser = responseLoggedInUser.data;
             const isAlreadyFollowing = loggedInUser.following.some(user => user.id === userIdToFollow);
-            
+
             if (!isAlreadyFollowing) {
                 const userToFollow = { id: userIdToFollow, username: usernameToFollow };
                 const updatedLoggedInUser = {
                     ...loggedInUser,
                     following: [...loggedInUser.following, userToFollow],
                 };
-                
+
                 await axios.patch(`${URL_USERS}/${loggedInUserId}`, updatedLoggedInUser);
                 const updatedPostUser = {
                     ...postUser,
                     followers: [...postUser.followers, { id: loggedInUserId, username: loggedInUser.username }],
                 };
                 await axios.patch(`${URL_USERS}/${userIdToFollow}`, updatedPostUser);
-    
-                console.log(`Siguiendo a ${usernameToFollow} (ID: ${userIdToFollow})`);
+
             } else {
-                console.log('Ya sigues a este usuario');
+                Swal.fire({
+                    text: (`Siguiendo a ${usernameToFollow}`),
+                    confirmButtonColor: '#FF7674',
+                    customClass: {
+                        content: 'sweetalert-content',
+                        confirmButton: 'sweetalert-confirm-button',
+                    },
+                });
             }
+            setFollowingUsers([...followingUsers, userIdToFollow]);
+            await axios.patch(`${URL_USERS}/${loggedInUserId}`, updatedLoggedInUser);
         } catch (error) {
             console.error('Error:', error);
         }
@@ -117,9 +134,16 @@ const Home = () => {
                                 <img className='home__imgPost' src={users[post.userId]?.avatar} alt='User Avatar' />
                                 <span className='home__span'>{users[post.userId]?.username}</span>
                             </div>
-                            
-                            <button onClick={() => handleFollow(users[post.userId]?.id, users[post.userId]?.username)}>Follow</button>
-                            </div>
+
+                            <button
+                                onClick={() => handleFollow(users[post.userId]?.id, users[post.userId]?.username)}
+                                className={`button-follow ${followingUsers.includes(users[post.userId]?.id) ? 'following' : ''}`}
+                                disabled={followingUsers.includes(users[post.userId]?.id)}
+                            >
+                                {followingUsers.includes(users[post.userId]?.id) ? 'Following' : 'Follow'}
+                            </button>
+
+                        </div>
                         <div className='home__postContainer'
                             onClick={() => goToPostUser(post.id)}
                         >
@@ -134,23 +158,23 @@ const Home = () => {
                             )}
                         </div>
                         <div>                            <div className='home__postOptions'>
-                                <div className='home__options'>
-                                    <div className='home__option'>
-                                        <img src={heart} alt="" />
-                                        <p>{post.likes}</p>
-                                    </div>
-                                    <div className='home__option'>
-                                        <img src={comment} alt="" />
-                                        <p>87K</p>
-                                    </div>
-                                    <div className='home__option'>
-                                        <img src={send} alt="" />
-                                        <p>10K</p>
-                                    </div>
+                            <div className='home__options'>
+                                <div className='home__option'>
+                                    <img src={heart} alt="" />
+                                    <p>{post.likes}</p>
                                 </div>
-
-                                <div><img src={save} alt="" /></div>
+                                <div className='home__option'>
+                                    <img src={comment} alt="" />
+                                    <p>87K</p>
+                                </div>
+                                <div className='home__option'>
+                                    <img src={send} alt="" />
+                                    <p>10K</p>
+                                </div>
                             </div>
+
+                            <div><img src={save} alt="" /></div>
+                        </div>
 
                             <div>
                                 <p className='home__footerPost'> <span className='home__namePost'>{users[post.userId]?.username}</span> {post.caption}</p>
