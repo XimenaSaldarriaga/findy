@@ -204,6 +204,37 @@ body {
         height: 90%;
         object-fit: cover;
     }
+
+
+    &__saved {
+        height: 100%;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        padding: 10px;
+    }
+
+    &__saved-post {
+        width: calc(50% - 10px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__saved-image {
+        width: 100%;
+        border-radius: 10px;
+        height: 90%;
+        object-fit: cover;
+    }
+
+    &__saved-video {
+        width: 100%;
+        border-radius: 10px;
+        height: 90%;
+        object-fit: cover;
+    }
+
     &__tag {
         height: 100%;
         display: flex;
@@ -279,6 +310,7 @@ body {
         width: 15px;
         height: 15px;
     }
+
 }
 
 @media (max-width:1200px) {

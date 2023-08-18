@@ -9,8 +9,9 @@ const PostForm = ({ onClose, userId }) => {
         userId: userId,
         content: '',
         caption: '',
-        likes: 5,       
-        comments: [] 
+        likes: 5,
+        likedUsers: [],
+        comments: []
     });
 
     const handleInputChange = (event) => {
@@ -24,22 +25,22 @@ const PostForm = ({ onClose, userId }) => {
     const handlePost = async (e) => {
         e.preventDefault();
         try {
-          const response = await axios.post(`${URL_POSTS}`, postData); 
-          Swal.fire({
-            text: 'Post successfully!',
-            confirmButtonColor: '#FF7674',
-            customClass: {
-              content: 'sweetalert-content',
-              confirmButton: 'sweetalert-confirm-button',
-            },
-          });
+            const response = await axios.post(`${URL_POSTS}`, postData);
+            Swal.fire({
+                text: 'Post successfully!',
+                confirmButtonColor: '#FF7674',
+                customClass: {
+                    content: 'sweetalert-content',
+                    confirmButton: 'sweetalert-confirm-button',
+                },
+            });
 
-          console.log('Posted:', response.data);
-          onClose();
+            console.log('Posted:', response.data);
+            onClose();
         } catch (error) {
-          console.error('Error posting:', error);
+            console.error('Error posting:', error);
         }
-      };
+    };
 
     return (
         <div className='postFormOverlay'>
@@ -58,7 +59,7 @@ const PostForm = ({ onClose, userId }) => {
                     <input
                         className="postForm__input"
                         type="url"
-                        name="content"  
+                        name="content"
                         value={postData.content} //
                         onChange={handleInputChange}
                         accept="image/*, video/*"
