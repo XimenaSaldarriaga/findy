@@ -94,7 +94,7 @@ const Profile = () => {
           {showSidebar && !showUpdateForm && (
             <div className='profile__sidebar'>
               <button className='profile__closeButton' onClick={toggleSidebar}>X</button>
-              <button  onClick={toggleUpdateForm}> <img className='profile__icons' src={edit} alt="" />Edit Profile</button>
+              <button onClick={toggleUpdateForm}> <img className='profile__icons' src={edit} alt="" />Edit Profile</button>
               <button onClick={handleLogout}> <img className='profile__icons' src={logout} alt="" />Logout</button>
             </div>
           )}
@@ -157,6 +157,15 @@ const Profile = () => {
                 className={activeIndex === 2 ? 'active' : ''}
               >
                 Album
+              </li>
+              <li
+                onClick={() => {
+                  setDisplayMode('saved'); 
+                  setActiveIndex(4); 
+                }}
+                className={activeIndex === 4 ? 'active' : ''} 
+              >
+                Saved
               </li>
               <li
                 onClick={() => {
@@ -237,11 +246,11 @@ const Profile = () => {
           </div>
           {showUpdateForm && <UpdateUsers onClose={closeUpdateForm} />}
           {showFollowersList && (
-        <FollowersList
-          followers={currentUser.followers}
-          onClose={() => setShowFollowersList(false)} 
-        />
-      )}
+            <FollowersList
+              followers={currentUser.followers}
+              onClose={() => setShowFollowersList(false)}
+            />
+          )}
         </div>
       )}
     </>
