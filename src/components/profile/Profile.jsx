@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import UpdateUsers from '../updateUser/UpdateUser';
 import FollowersList from '../followersList/FollowersList';
 import axios from 'axios';
+import TaggedPosts from '../taggedPosts/TaggedPosts';
 
 
 const Profile = () => {
@@ -56,7 +57,7 @@ const Profile = () => {
       try {
         const postData = await fetchPostData(userId);
         setUserPost(postData);
-        console.log("userPost inside useEffect:", postData);
+        //   console.log("userPost inside useEffect:", postData);
       } catch (error) {
         console.log("Error obteniendo los post", error);
       }
@@ -278,6 +279,7 @@ const Profile = () => {
                           allowFullScreen
                         />
                       ) : (
+<<<<<<< HEAD
                         <img
                           className="profile__photoAlbum"
                           src={post.content}
@@ -286,8 +288,25 @@ const Profile = () => {
                       )}
                     </div>
                   ))}
+=======
+                        <img className='profile__photoAlbum' src={post.content} alt={post.caption} />
+                      )}
+                    </div>
+                  ))}
+              </div>
+              <div className='profile__tag' >
+                {displayMode === 'tag' && (
+                  <TaggedPosts
+                    goToPostUser={goToPostUser}
+                    isYouTubeLink={isYouTubeLink}
+                    getVideoIdFromUrl={getVideoIdFromUrl}
+                    userData={userData}
+                  />
+                )}
+>>>>>>> 8902f77780ab94e0be161f76c71ec9763d05be3c
               </div>
               
+
 
 
               <div className='profile__saved'>
