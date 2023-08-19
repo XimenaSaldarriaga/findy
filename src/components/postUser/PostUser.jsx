@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios, { formToJSON } from 'axios';
 import heart from '../../assets/heart.png';
 import comment from '../../assets/comment.png';
 import send from '../../assets/send.png';
 import like from '../../assets/like.png';
 import white from '../../assets/arrow-white.png';
+import sendComment from '../../assets/send-comment.png'
 import { likePost, URL_POSTS, URL_USERS, URL_COMMENTS } from '../../services/data'
 import './postUser.scss'
 import { useAuth } from '../authContext';
@@ -15,6 +16,7 @@ const PostUser = () => {
   const { postId } = useParams();
   const postIdNumber = parseInt(postId);
   const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState("");
   const [post, setPost] = useState(null);
   const [author, setAuthor] = useState(null);
   const [userAvatar, setUserAvatar] = useState(null);
@@ -97,6 +99,25 @@ const PostUser = () => {
       console.error('Error liking post:', error);
     }
   };
+  const handleCommentSubmit = async () => {
+    if (newComment.trim() === "") {
+      return;
+    }
+
+    try {
+      const response = await axios.post(URL_COMMENTS, {
+        postId: postIdNumber,
+        userId: userId,
+        text: newComment,
+      });
+
+      const newCommentData = response.data;
+      setComments([...comments, newCommentData]);
+      setNewComment("");
+    } catch (error) {
+      console.error("Error al publicar el comentario:", error);
+    }
+  };
 
   return (
     <div className='post'>
@@ -161,16 +182,27 @@ const PostUser = () => {
               .map((comment) => (
                 <Comments key={comment.id} comment={comment} />
               ))}
-          <div className='post__comment'>
-            {userId && (
-              <img className='post__commentUser' src={userAvatar} type="url" />
-            )}
-            <input
-              className='post__commentMessage'
-              type="text"
-              placeholder='Write comment as username...'
-            />
+          <div className="post__comment">
+            {userId && <img className="post__commentUser" src={userAvatar} alt="User" />}
+            <div>
+              <input
+                className="post__commentMessage"
+                type="text"
+                placeholder="Write comment here..."
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleCommentSubmit();
+                  }
+                }}
+              />
+            </div>
+
+            <img className="post__sendIcon" src={sendComment} alt="Send" onClick={handleCommentSubmit} />
+
           </div>
+
         </div>
       </div>
     </div>

@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import UpdateUsers from '../updateUser/UpdateUser';
 import FollowersList from '../followersList/FollowersList';
 import axios from 'axios';
+import TaggedPosts from '../taggedPosts/TaggedPosts';
 
 
 const Profile = () => {
@@ -58,7 +59,7 @@ const Profile = () => {
       try {
         const postData = await fetchPostData(userId);
         setUserPost(postData);
-        console.log("userPost inside useEffect:", postData);
+        //   console.log("userPost inside useEffect:", postData);
       } catch (error) {
         console.log('Error obteniendo los post', error);
       }
@@ -244,23 +245,16 @@ const Profile = () => {
                   ))}
               </div>
               <div className='profile__tag' >
-                {displayMode === 'tag' &&
-                  userPost.map(post => (
-                    <div key={post.id} className='profile__divTag' onClick={() => goToPostUser(post.id)}>
-                      {isYouTubeLink(post.content) ? (
-                        <iframe
-                          className='profile__videoTag'
-                          title={post.caption}
-                          src={`https://www.youtube.com/embed/${getVideoIdFromUrl(post.content)}`}
-                          frameBorder='0'
-                          allowFullScreen
-                        />
-                      ) : (
-                        <img className='profile__photoTag' src={post.content} alt={post.caption} />
-                      )}
-                    </div>
-                  ))}
+                {displayMode === 'tag' && (
+                  <TaggedPosts
+                    goToPostUser={goToPostUser}
+                    isYouTubeLink={isYouTubeLink}
+                    getVideoIdFromUrl={getVideoIdFromUrl}
+                    userData={userData}
+                  />
+                )}
               </div>
+
 
               <div className='profile__saved'>
                 {displayMode === 'saved' &&

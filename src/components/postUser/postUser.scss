@@ -42,6 +42,7 @@
 
     &__paragraph {
         padding: 20px;
+        width: 80%;
     }
 
     &__info {
@@ -81,7 +82,7 @@
         justify-content: space-between;
         display: flex;
         align-items: center;
-    }
+        }
 
     &__userComments {
         display: flex;
@@ -103,12 +104,11 @@
 
     &__commentUser {
         border-radius: 50%;
-        width: 35px;
-        height: 35px;
+        width: 33px;
+        height: 33px;
         border: none;
-        text-align: center;
-        outline: none;
-        background-color: #FF7674;
+      
+        
     }
 
     &__commentMessage {
@@ -118,11 +118,9 @@
         width: 100%;
         border: none;
         outline: none;
-        background-image: url(../../assets/send-comment.png);
         background-repeat: no-repeat;
         background-position: 100%;
-
-    }
+         }
 
     &__user-name {
         display: flex;
