@@ -59,7 +59,7 @@ const Profile = () => {
       try {
         const postData = await fetchPostData(userId);
         setUserPost(postData);
-        //   console.log("userPost inside useEffect:", postData);
+        
       } catch (error) {
         console.log('Error obteniendo los post', error);
       }
