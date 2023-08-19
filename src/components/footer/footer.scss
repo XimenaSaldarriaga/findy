@@ -1,21 +1,34 @@
 .footer {
     position: fixed;
     bottom: 0;
-    background-color: #FF7674;
+    background-image: url('../../assets/footer.png');
     display: flex;
     justify-content: space-between;
     width: 100%;
+    background-size: cover;
 
     &__left {
         display: flex;
         align-items: center;
         width: 20%;
         justify-content: space-between;
-        margin: 20px;
+        padding: 20px;
+    }
+
+    &__left img {
+        cursor: pointer;
     }
 
     &__center {
-        margin: 20px;
+        padding: 7px;
+        border-radius: 100%;
+        background-color: #FF7674;
+        align-self: center;
+        justify-self: center;
+    }
+
+    &__center img {
+        cursor: pointer;
     }
     
     &__right {
@@ -23,12 +36,18 @@
         align-items: center;
         width: 20%;
         justify-content: space-between;
-        margin: 20px;
+        padding: 20px;
+    }
+
+    &__right img {
+        cursor: pointer;
     }
     
     &__user {
-        width: 23px;
-        height: 23px;
+        display: flex;
+        object-fit: cover;
+        width: 26px;
+        height: 26px;
         border: none;
         border-radius: 50%;
         outline: none;

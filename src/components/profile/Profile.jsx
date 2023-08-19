@@ -1,32 +1,49 @@
 import React, { useEffect, useState } from 'react';
 import './profile.scss';
 import { useAuth } from '../authContext';
-import { fetchPostData, fetchUserData } from '../../services/data';
+import { fetchPostData, fetchUserData, URL_USERS, URL_POSTS } from '../../services/data';
 import dots from '../../assets/dots.png';
 import arrow from '../../assets/arrow.png';
 import edit from '../../assets/edit.png';
 import logout from '../../assets/logout.png';
 import { useNavigate } from 'react-router-dom';
 import UpdateUsers from '../updateUser/UpdateUser';
+import FollowersList from '../followersList/FollowersList';
+import axios from 'axios';
+import TaggedPosts from '../taggedPosts/TaggedPosts';
+
 
 const Profile = () => {
   const { state, dispatch } = useAuth();
   const userId = state.userId || localStorage.getItem('userId');
   const [currentUser, setCurrentUser] = useState(null);
   const [userPost, setUserPost] = useState([]);
-
+  const [displayMode, setDisplayMode] = useState('photos');
+  const [showFollowersList, setShowFollowersList] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const navigate = useNavigate();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [userData, setUserData] = useState({});
+  const [savedPosts, setSavedPosts] = useState([]);
 
   const toggleUpdateForm = () => {
     setShowUpdateForm(!showUpdateForm);
-    
+
   };
 
   const closeUpdateForm = () => {
     setShowUpdateForm(false);
   };
+
+  const goToPostUser = (postId) => {
+    navigate(`/post/${postId}`);
+  }
+
+  const toggleSidebar = () => {
+    setShowSidebar(!showSidebar);
+  };
+
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -42,19 +59,42 @@ const Profile = () => {
       try {
         const postData = await fetchPostData(userId);
         setUserPost(postData);
-        console.log("userPost inside useEffect:", postData);
-            } catch (error) {
+        //   console.log("userPost inside useEffect:", postData);
+      } catch (error) {
         console.log('Error obteniendo los post', error);
       }
     };
 
+
+    const fetchData = async () => {
+      try {
+        const responseUserData = await axios.get(`${URL_USERS}/${userId}`);
+        setUserData(responseUserData.data);
+
+        const responseSavedPosts = await axios.get(URL_POSTS);
+        const savedPostsData = responseSavedPosts.data.filter(post => userData.saved.includes(post.id));
+        setSavedPosts(savedPostsData);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+
     fetchUser();
     fetchPost();
-  }, [userId]);
+    fetchData();
+  }, [userId, userData.saved]);
+
+  const isYouTubeLink = (url) => url.includes('youtube.com');
+  const getVideoIdFromUrl = (url) => {
+    const parts = url.split('/');
+    return parts[parts.length - 1];
+  };
 
   const handleLogout = () => {
     dispatch({ type: 'LOGOUT' });
     localStorage.removeItem('userId');
+    localStorage.removeItem('authenticated');
     navigate('/');
   };
 
@@ -63,6 +103,7 @@ const Profile = () => {
       navigate(`/home/${userId}`);
     }
   };
+
   return (
     <>
       {currentUser && (
@@ -70,8 +111,9 @@ const Profile = () => {
           <img className='profile__image' src={currentUser.banner} alt={currentUser.username} />
           <img className='profile__dots' src={dots} alt="" onClick={() => setShowSidebar(!showSidebar)} />
 
-          {showSidebar && (
+          {showSidebar && !showUpdateForm && (
             <div className='profile__sidebar'>
+              <button className='profile__closeButton' onClick={toggleSidebar}>X</button>
               <button onClick={toggleUpdateForm}> <img className='profile__icons' src={edit} alt="" />Edit Profile</button>
               <button onClick={handleLogout}> <img className='profile__icons' src={logout} alt="" />Logout</button>
             </div>
@@ -79,13 +121,17 @@ const Profile = () => {
           <img className='profile__arrow' src={arrow} alt="" onClick={goToHome} />
           <div className='profile__info'>
             <div className='profile__likes'>
-              <div className='profile__option'>
-                <p className='profile__subtitle'> {currentUser.followers} M </p>
+              <div className='profile__option profile__followers'>
+                <p className='profile__subtitle' onClick={() => setShowFollowersList(true)}> {currentUser.followers.length} M </p>
                 <p>Followers</p>
               </div>
               <img className='profile__input' src={currentUser.avatar} alt={currentUser.username} />
               <div className='profile__option'>
-                <p className='profile__subtitle'>{userPost.likes} M</p>
+                <p className='profile__subtitle'>
+                  {userPost
+                    .filter(post => post.userId === currentUser.id)
+                    .reduce((totalLikes, post) => totalLikes + post.likes, 0)} M
+                </p>
                 <p>Likes</p>
               </div>
             </div>
@@ -105,27 +151,141 @@ const Profile = () => {
 
           <div className='profile__posts'>
             <ul className='profile__options'>
-              <li>Photos</li>
-              <li>Videos</li>
-              <li>Album</li>
-              <li>Tag</li>
+              <li
+                onClick={() => {
+                  setDisplayMode('photos');
+                  setActiveIndex(0);
+                }}
+                className={activeIndex === 0 ? 'active' : ''}
+              >
+                Photos
+              </li>
+              <li
+                onClick={() => {
+                  setDisplayMode('videos');
+                  setActiveIndex(1);
+                }}
+                className={activeIndex === 1 ? 'active' : ''}
+              >
+                Videos
+              </li>
+              <li
+                onClick={() => {
+                  setDisplayMode('album');
+                  setActiveIndex(2);
+                }}
+                className={activeIndex === 2 ? 'active' : ''}
+              >
+                Album
+              </li>
+              <li
+                onClick={() => {
+                  setDisplayMode('saved');
+                  setActiveIndex(4);
+                }}
+                className={activeIndex === 4 ? 'active' : ''}
+              >
+                Saved
+              </li>
+              <li
+                onClick={() => {
+                  setDisplayMode('tag');
+                  setActiveIndex(3);
+                }}
+                className={activeIndex === 3 ? 'active' : ''}
+              >
+                Tag
+              </li>
             </ul>
             <div className='profile__photos'>
-
               <div className='profile__photodiv'>
-                <img className='profile__photo' src="https://s3-alpha-sig.figma.com/img/bc3b/dcc1/67006aac91c99ed7b37fb3d72d058ad9?Expires=1692576000&Signature=I93~crCohnjI1PWpDjilvjphsAutw44mgIunUHJZU5lOO937G5-lHJAP69OXIXzB4XoiINwx4VbnOpqD9Q5rRudlJX5jZlUsnui0pon0XaA6Q~fBKXJSn5sK1hh~hoIbLZT0zbMcLPMOBRUEayTn4~84AmfWGDvhXGWzAs0bewxUk2FxNanwoMaBdFs~volsC-X-Ny4qtIoF2QdyuxTrCihNop9S4xXENwzWhl6C0hlGKF5Oy6Pc8iY0wcVyPbVKrFUbJFnIvG~NnRWUlGVIT6o3iC0A169ii43CzpX-mNZXOHjiWvp7r8cTbGByvlf48KKPo1k1QACmgGijQ4c3ew__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" alt="" />
+                {displayMode === 'photos' &&
+                  userPost
+                    .filter(post => !isYouTubeLink(post.content))
+                    .map(post => (
+                      <img className='profile__photo' src={post.content} alt={post.caption} key={post.id} onClick={() => goToPostUser(post.id)} />
+                    ))}
+                <div className='profile__videoContainer'>
+                  {displayMode === 'videos' &&
+                    userPost
+                      .filter(post => isYouTubeLink(post.content))
+                      .map(post => (
+                        <div
+                          key={post.id}
+                          className='profile__videos'
+                          onClick={() => goToPostUser(post.id)}
+                        >
+                          <iframe
+                            className='profile__video'
+                            title={post.caption}
+                            src={`https://www.youtube.com/embed/${getVideoIdFromUrl(post.content)}`}
+                            frameBorder='0'
+                            allowFullScreen
+                          />
+                        </div>
+                      ))}
+                </div>
+              </div>
+              <div className='profile__album' >
+                {displayMode === 'album' &&
+                  userPost.map(post => (
+                    <div key={post.id} className='profile__divAlbum' onClick={() => goToPostUser(post.id)}>
+                      {isYouTubeLink(post.content) ? (
+                        <iframe
+                          className='profile__videoAlbum'
+                          title={post.caption}
+                          src={`https://www.youtube.com/embed/${getVideoIdFromUrl(post.content)}`}
+                          frameBorder='0'
+                          allowFullScreen
+                        />
+                      ) : (
+                        <img className='profile__photoAlbum' src={post.content} alt={post.caption} />
+                      )}
+                    </div>
+                  ))}
+              </div>
+              <div className='profile__tag' >
+                {displayMode === 'tag' && (
+                  <TaggedPosts
+                    goToPostUser={goToPostUser}
+                    isYouTubeLink={isYouTubeLink}
+                    getVideoIdFromUrl={getVideoIdFromUrl}
+                    userData={userData}
+                  />
+                )}
               </div>
 
-              <div className='profile__photodiv'><img className='profile__photo' src="https://s3-alpha-sig.figma.com/img/47a3/b386/305d6fd1514463f1edc8412d7ae7b45c?Expires=1692576000&Signature=QWrcXF2RFQ60PRsiEB0lObCRDm8sbd3WnVro5k-Ggm75zSbF2GcogxaAocFNXd4wjXnmzyDb~93r2oIc8HLDmABOD0IJ87xhx3rLW-P3yoRwG-muqNxK6-bmRYNDNLTqn7-5Ph96PkuBzfernypjN3S5ptSTqfd2o5IJUXyqUgVqiEhVkPz497HWX16UKZvJ53Xce9I9IAnitYvYonN6yzbH0AiLQdkwZBg~Fw0WB7U4NqgAzZDObJKL7zrxjv-R9o9wLkG4~nmbDo-TshCrnIPhfMvRY7JFJYaenETYfUfHq6KvX-nccQcLSLH7o5nMLYIYhn2sFpnAyGUsORHPng__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" alt="" /></div>
 
-              <div className='profile__photodiv'><img className='profile__photo' src="https://s3-alpha-sig.figma.com/img/80d3/d616/68632c49988f908bc63533338e923678?Expires=1692576000&Signature=ZPpwgmaGQDVfNaXbASaEdVu5A2FPNGnB5AC-cS2eNvdqv1qyg-lCeYvuBgA01TVpKSo89UkKBC0TKE2TcpvZB5exxKf1UFHXbaiopp6tJoFTs3oH7iJ04~71097qSGaiMSwKFZK3CDdN6HQdvqL-qpt8cKIkcR4Sv0xZ0ZQJC~cwiHAuW8KBMDW53AC~m5D3C4gpSbYW04p5ODLfmIItn4T6nc39ajmIQ6VkjfwFgiNsHbeNLsouaHhekxLDDpKnnizJK3Y9XmGQROg6KDvDtkTF17Z-H41-mqYFqMkKX2WBsqeBp77V4ZkE28wkfjHJN4Mb0djlTM2teSWoTJoStg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" alt="" /></div>
-
-              <div className='profile__photodiv'><img className='profile__photo' src="
-          https://s3-alpha-sig.figma.com/img/e16a/f17a/4805fb0a220637377cce1952fd4f4a39?Expires=1692576000&Signature=Rptr~vpa89PlskoUq2GFt2fT7UTO59ettcTanaTrjAII1F0kAoTCg1lvJ~omr0ZZNPaqKsn4kiB2H1lLj763jCCL1j5lXlBOqtIhndkyn22TTAs2werGv1zspp60NTWD-gLuCg61ktevo7~oQOOf3k1CIfSSTI-EHp4cDUn8F-aLTML9pD5ythN0F6cyvACttG5xvQsmxKagvMk-EIqobdhm7wpQK5JmZ1jfBSrCoeAmM3H0vq8Ds7XhZrdf9C9bcTTKe8EDTsd~ymKDvh-hY7u~nQkfr6UjlcwHMnDIvdjUmwCgHG-kaKVhQOE5BGw1qcA6LGKfpB1y8n27TbCPug__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" alt="" /></div>
+              <div className='profile__saved'>
+                {displayMode === 'saved' &&
+                  savedPosts.map(post => (
+                    <div
+                      key={post.id}
+                      className='profile__saved-post'
+                      onClick={() => goToPostUser(post.id)}
+                    >
+                      {post.content.includes('youtube') ? (
+                        <iframe
+                          className='profile__saved-video'
+                          src={post.content}
+                          title='YouTube Video'
+                        />
+                      ) : (
+                        <img className='profile__saved-image' src={post.content} alt='Saved Post' />
+                      )}
+                    </div>
+                  ))}
+              </div>
 
             </div>
           </div>
           {showUpdateForm && <UpdateUsers onClose={closeUpdateForm} />}
+          {showFollowersList && (
+            <FollowersList
+              followers={currentUser.followers}
+              onClose={() => setShowFollowersList(false)}
+            />
+          )}
         </div>
       )}
     </>

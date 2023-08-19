@@ -1,24 +1,211 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './home.scss'
 import logo from '../../assets/logo.png'
 import heart from '../../assets/heart.png'
 import messages from '../../assets/messages.png'
 import comment from '../../assets/comment.png'
 import send from '../../assets/send.png'
-import save from '../../assets/save.png'
-import { useParams } from 'react-router-dom'
+import saved from '../../assets/save.png'
+import save from '../../assets/saved-white.png'
+import { likePost, fetchUserData, URL_POSTS, URL_USERS } from '../../services/data'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import Swal from 'sweetalert2'
+import like from '../../assets/like.png';
+
+const Home = () => {
 
 
-const Home = () =>  {
-    const { id } = useParams(); 
 
-    const storyData = [
+    const userId = localStorage.getItem('userId');
+    const [posts, setPosts] = useState([]);
+    const [users, setUsers] = useState({});
+    const [followingUsers, setFollowingUsers] = useState([]);
+    const navigate = useNavigate();
+    const [savedPostIds, setSavedPostIds] = useState([]);
 
-        { name: 'Ximena' },
-        { name: 'Neis' },
-        { name: 'Ana Maria' },
-        { name: 'Juanito' },
-    ];
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await fetch(URL_POSTS);
+            const postData = await response.json();
+            const filteredPosts = postData.filter(post => post.userId !== parseInt(userId));
+            setPosts(filteredPosts);
+    
+            const usersData = {};
+            for (const post of filteredPosts) {
+                if (!usersData[post.userId]) {
+                    const userData = await fetchUserData(post.userId);
+                    usersData[post.userId] = userData;
+                }
+            }
+    
+            if (usersData[userId]) {
+                delete usersData[userId];
+            }
+    
+            setUsers(usersData);
+    
+            try {
+                const responseLoggedInUser = await axios.get(`${URL_USERS}/${userId}`);
+                const loggedInUser = responseLoggedInUser.data;
+                setFollowingUsers(loggedInUser.following.map(user => user.id));
+    
+                const savedPostIdsFromLocalStorage = JSON.parse(localStorage.getItem('savedPostIds')) || [];
+                setSavedPostIds(savedPostIdsFromLocalStorage);
+            } catch (error) {
+                console.error('Error fetching following users:', error);
+            }
+        };
+        fetchData();
+    }, [userId]);
+    
+
+    const handleFollow = async (userIdToFollow, usernameToFollow) => {
+        const loggedInUserId = localStorage.getItem('userId');
+
+        try {
+            const responsePostUser = await axios.get(`${URL_USERS}/${userIdToFollow}`);
+            const postUser = responsePostUser.data;
+            const responseLoggedInUser = await axios.get(`${URL_USERS}/${loggedInUserId}`);
+            const loggedInUser = responseLoggedInUser.data;
+            const isAlreadyFollowing = loggedInUser.following.some(user => user.id === userIdToFollow);
+
+            if (!isAlreadyFollowing) {
+                const userToFollow = { id: userIdToFollow, username: usernameToFollow };
+                const updatedLoggedInUser = {
+                    ...loggedInUser,
+                    following: [...loggedInUser.following, userToFollow],
+                };
+
+                await axios.patch(`${URL_USERS}/${loggedInUserId}`, updatedLoggedInUser);
+                const updatedPostUser = {
+                    ...postUser,
+                    followers: [...postUser.followers, { id: loggedInUserId, username: loggedInUser.username }],
+                };
+                await axios.patch(`${URL_USERS}/${userIdToFollow}`, updatedPostUser);
+                Swal.fire({
+                    text: (`Following ${usernameToFollow}`),
+                    confirmButtonColor: '#FF7674',
+                    customClass: {
+                        content: 'sweetalert-content',
+                        confirmButton: 'sweetalert-confirm-button',
+                    },
+                });
+
+            } else {
+                Swal.fire({
+                    text: (error),
+                    confirmButtonColor: '#FF7674',
+                    customClass: {
+                        content: 'sweetalert-content',
+                        confirmButton: 'sweetalert-confirm-button',
+                    },
+                });
+            }
+            setFollowingUsers([...followingUsers, userIdToFollow]);
+            await axios.patch(`${URL_USERS}/${loggedInUserId}`, updatedLoggedInUser);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+    const goToPostUser = (postId) => {
+        navigate(`/post/${postId}`);
+    }
+
+    const handleLike = async (postId) => {
+        try {
+            await likePost(postId, userId);
+
+            setPosts(prevPosts => {
+                return prevPosts.map(post => {
+                    if (post.id === postId) {
+                        if (post.likedUsers.includes(userId)) {
+                            post.likes--;
+                            post.likedUsers = post.likedUsers.filter(likedUserId => likedUserId !== userId);
+                        } else {
+                            post.likes++;
+                            post.likedUsers.push(userId);
+                        }
+                    }
+                    return post;
+                });
+            });
+        } catch (error) {
+            console.error('Error liking post:', error);
+        }
+    };
+
+    const handleSavePost = async (postId) => {
+        try {
+            const responseLoggedInUser = await axios.get(`${URL_USERS}/${userId}`);
+            const loggedInUser = responseLoggedInUser.data;
+    
+            if (!loggedInUser.saved.includes(postId)) {
+                const updatedLoggedInUser = {
+                    ...loggedInUser,
+                    saved: [...loggedInUser.saved, postId],
+                };
+    
+                await axios.patch(`${URL_USERS}/${userId}`, updatedLoggedInUser);
+                const responseSavedPost = await axios.get(`${URL_POSTS}/${postId}`);
+                const savedPost = responseSavedPost.data;
+                const updatedSavedPost = {
+                    ...savedPost,
+                    savedCount: savedPost.savedCount + 1,
+                };
+                await axios.patch(`${URL_POSTS}/${postId}`, updatedSavedPost);
+    
+                Swal.fire({
+                    text: 'Post saved successfully!',
+                    confirmButtonColor: '#FF7674',
+                    customClass: {
+                        content: 'sweetalert-content',
+                        confirmButton: 'sweetalert-confirm-button',
+                    },
+                });
+    
+                setSavedPostIds([...savedPostIds, postId]);
+            } else {
+                const updatedLoggedInUser = {
+                    ...loggedInUser,
+                    saved: loggedInUser.saved.filter(id => id !== postId),
+                };
+    
+                await axios.patch(`${URL_USERS}/${userId}`, updatedLoggedInUser);
+                const responseSavedPost = await axios.get(`${URL_POSTS}/${postId}`);
+                const savedPost = responseSavedPost.data;
+                const updatedSavedPost = {
+                    ...savedPost,
+                    savedCount: Math.max(savedPost.savedCount - 1, 0),
+                };
+                await axios.patch(`${URL_POSTS}/${postId}`, updatedSavedPost);
+    
+                Swal.fire({
+                    text: 'Post removed from saved!',
+                    confirmButtonColor: '#FF7674',
+                    customClass: {
+                        content: 'sweetalert-content',
+                        confirmButton: 'sweetalert-confirm-button',
+                    },
+                });
+    
+                setSavedPostIds(savedPostIds.filter(id => id !== postId));
+            }
+
+            const updatedSavedPostIds = savedPostIds.includes(postId)
+            ? savedPostIds.filter(id => id !== postId)
+            : [...savedPostIds, postId];
+        setSavedPostIds(updatedSavedPostIds);
+
+        localStorage.setItem('savedPostIds', JSON.stringify(updatedSavedPostIds));
+        } catch (error) {
+            console.error('Error saving post:', error);
+        }
+    };
+    
+
+
     return (
         <div className='home'>
 
@@ -40,10 +227,10 @@ const Home = () =>  {
                     </div>
 
                     <div className='home__allStories'>
-                        {storyData.map((story, index) => (
-                            <div className='home__yourStory' key={index}>
-                                <input className='home__url' type="url" />
-                                <span className='home__span'>{story.name}</span>
+                        {users && Object.values(users).map(user => (
+                            <div className='home__yourStory' key={user.id}>
+                                <img className='home__url' src={user.story} alt='User Story' />
+                                <span className='home__span'>{user.username}</span>
                             </div>
                         ))}
                     </div>
@@ -51,54 +238,85 @@ const Home = () =>  {
             </div>
 
             <div className='home__main'>
+                {posts.map((post) => (
+                    <div key={post.id} className='home__post'>
+                        <div className=' home__postHeader'>
+                            <div className='home__input'>
+                                <img className='home__imgPost' src={users[post.userId]?.avatar} alt='User Avatar' />
+                                <span className='home__span'>{users[post.userId]?.username}</span>
+                            </div>
 
-                <div className='home__post'>
+                            <button
+                                onClick={() => handleFollow(users[post.userId]?.id, users[post.userId]?.username)}
+                                className={`button-follow ${followingUsers.includes(users[post.userId]?.id) ? 'following' : ''}`}
+                                disabled={followingUsers.includes(users[post.userId]?.id)}
+                            >
+                                {followingUsers.includes(users[post.userId]?.id) ? 'Following' : 'Follow'}
+                            </button>
 
-                    <div className=' home__postHeader'>
-                        <div className='home__input'>
-                            <input className='home__imgPost' type="url" />
                         </div>
-                        <span className='home__span'>Neis</span>
-                    </div>
-
-                    <img className='home__postImagen' src="https://s3-alpha-sig.figma.com/img/0d75/74ae/a75180ac4497e875a99cbb62895b8aa8?Expires=1692576000&Signature=XqdnCHyXrL-uhi3VcWyfyoaVFW9dnxk~C5bbGUnJ6IeTP3JxURzah0JWpFV0szsIa99nVRwjaO3GkrMZLAR8kByPiiEQEOVzWV4TARWaytnKsUNm525x6oSjcTDQB6tQh5y1hoGVv~3HYPHKZDai6g-o2SxZuIyyWU11fs6Ba~V4I1kz84-16o3ySwbZxYyVV5qOHMKTxQn0svD6~bJ4cPpSCa8pA26QYxChb81yhinkNAj9q8f1qTj7ABr1ag0z5haUDdx~PbEyrUGKwgkS06ofOP~54wPcW7V8mxZL2JwOf0oFy7m5T-zgjspM6ugCcpKS7VHtE3NwI3rQbeAoag__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" alt="" />
-
-
-                    <div>
-
-
-                        <div className='home__postOptions'>
+                        <div className='home__postContainer'
+                            onClick={() => goToPostUser(post.id)}
+                        >
+                            {post.content.includes('youtube') ? (
+                                <iframe
+                                    className='home__postVideo'
+                                    src={post.content}
+                                    title='YouTube Video'
+                                />
+                            ) : (
+                                <img className='home__postImagen' src={post.content} alt='' />
+                            )}
+                        </div>
+                        <div>                            <div className='home__postOptions'>
                             <div className='home__options'>
-                                <div className='home__option'>
-                                    <img src={heart} alt="" />
-                                    <p>300K</p>
+                                <div
+                                    onClick={() => handleLike(post.id)}
+                                    className={`home__option`}
+                                >
+                                    <span>
+                                        {post.likedUsers.includes(userId) ? (
+                                            <img className='home__iconLike' src={like} alt="Like" />
+                                        ) : (
+                                            <img className='home__iconLike' src={heart} alt="Heart" />
+                                        )}
+                                    </span>
+                                    <p>{post.likes} K</p>
                                 </div>
+
                                 <div className='home__option'>
                                     <img src={comment} alt="" />
-                                    <p>87K</p>
+                                    <p>87 K</p>
                                 </div>
                                 <div className='home__option'>
                                     <img src={send} alt="" />
-                                    <p>10K</p>
+                                    <p>10 K</p>
                                 </div>
                             </div>
 
-                            <div><img src={save} alt="" /></div>
+                            <div onClick={() => handleSavePost(post.id)}>
+                                {savedPostIds.includes(post.id) ? (
+                                    <img className='home__iconSave' src={saved} alt="Saved" />
+                                ) : (
+                                    <img className='home__iconSaved' src={save} alt="Save" />
+                                )}
+                            </div>
                         </div>
 
-                        <div>
-                            <p className='home__footerPost'> <span className='home__namePost'>Neis Rosado</span> Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veniam consectetur maiores aperiam cumque eum voluptatibus dignissimos accusantium natus aspernatur veritatis, quia harum sunt sint blanditiis ipsa autem molestias quae culpa.</p>
+                            <div>
+                                <p className='home__footerPost'> <span className='home__namePost'>{users[post.userId]?.username}</span> {post.caption}</p>
+                            </div>
                         </div>
                     </div>
+                ))}
 
-                </div>
             </div>
 
         </div>
     )
 }
 
-export default Home
+export default Home;
 
 
 

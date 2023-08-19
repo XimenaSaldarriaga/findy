@@ -1,59 +1,212 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios, { formToJSON } from 'axios';
+import heart from '../../assets/heart.png';
+import comment from '../../assets/comment.png';
+import send from '../../assets/send.png';
+import like from '../../assets/like.png';
+import white from '../../assets/arrow-white.png';
+import sendComment from '../../assets/send-comment.png'
+import { likePost, URL_POSTS, URL_USERS, URL_COMMENTS } from '../../services/data'
 import './postUser.scss'
-import heart from '../../assets/heart.png'
-import comment from '../../assets/comment.png'
-import send from '../../assets/send.png'
+import { useAuth } from '../authContext';
+import Comments from '../comments/Comments';
 
 const PostUser = () => {
+  const { postId } = useParams();
+  const postIdNumber = parseInt(postId);
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState("");
+  const [post, setPost] = useState(null);
+  const [author, setAuthor] = useState(null);
+  const [userAvatar, setUserAvatar] = useState(null);
+  const { state: { userId, isAuthenticated } } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchPostDetails = async () => {
+      try {
+
+        const postResponse = await axios.get(`${URL_POSTS}/${postId}`);
+        const postData = postResponse.data;
+        setPost(postData);
+        console.log(postData);
+
+        const userResponse = await axios.get(`${URL_USERS}/${postData.userId}`);
+        const userData = userResponse.data;
+        setAuthor(userData);
+        console.log(userData);
+
+        if (userId) {
+          const userAvatarResponse = await axios.get(`${URL_USERS}/${userId}`);
+          setUserAvatar(userAvatarResponse.data.avatar);
+        }
+
+
+      } catch (error) {
+        console.error('Error fetching post details:', error);
+      }
+    };
+
+    const fetchComments = async () => {
+      try {
+        const response = await axios.get(`${URL_COMMENTS}`);
+        const responseComments = response.data;
+        setComments(responseComments);
+        console.log('comments response', responseComments);
+      } catch (error) {
+        console.error('Error fetching comments:', error);
+      }
+    };
+
+    fetchComments();
+
+    fetchPostDetails();
+  }, [postId, userId]);
+
+  if (!post || !author) {
+    return <div>Loading...</div>;
+  }
+
+  const isYouTubeLink = (url) => url.includes('youtube.com');
+  const getVideoIdFromUrl = (url) => {
+    const parts = url.split('/');
+    return parts[parts.length - 1];
+  };
+  const goToHome = () => {
+    if (userId && isAuthenticated) {
+      navigate(`/home/${userId}`);
+    }
+  };
+
+
+  const handleLikePost = async (postId) => {
+    try {
+      await likePost(postId, userId);
+      setPost(prevPost => {
+        if (prevPost.id === postId) {
+          if (prevPost.likedUsers.includes(userId)) {
+            prevPost.likes--;
+            prevPost.likedUsers = prevPost.likedUsers.filter(likedUserId => likedUserId !== userId);
+          } else {
+            prevPost.likes++;
+            prevPost.likedUsers.push(userId);
+          }
+        }
+        return { ...prevPost };
+      });
+    } catch (error) {
+      console.error('Error liking post:', error);
+    }
+  };
+  const handleCommentSubmit = async () => {
+    if (newComment.trim() === "") {
+      return;
+    }
+
+    try {
+      const response = await axios.post(URL_COMMENTS, {
+        postId: postIdNumber,
+        userId: userId,
+        text: newComment,
+      });
+
+      const newCommentData = response.data;
+      setComments([...comments, newCommentData]);
+      setNewComment("");
+    } catch (error) {
+      console.error("Error al publicar el comentario:", error);
+    }
+  };
+
   return (
     <div className='post'>
-      <img className='post__image' src="https://s3-alpha-sig.figma.com/img/e16a/f17a/4805fb0a220637377cce1952fd4f4a39?Expires=1693180800&Signature=TIV6UK-wjy08selUQQsWxhJTU4O731UP8DrGCjlHxKfLQW49RMeiMLWM-vuQFZdhb0Vx~udYwPsEIFxoYXjEpb90REvuqtA9RL52gBd3hrpYhg5WID2H6USr20Ia6r3dcmiFFNESLHoZKtaQeCsPhy8pSJCmYcR99gU-bZi-zYqWsaZXY1zv9oZeCVugEpj52hWmpI-IdXqrBKrLjMcXx9o7qouAwEVz7xOTiIJENbgsZ9YnH2CiifsQpjyzDPZziU5FvMYct1Gschb9ElY8dj-Gc4O~1HEvYrLTky9iNwaIBvjnMZCco2Qnhf~YkldiWvH~wN6Qoq55~T9ZURKfuw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" alt="" />
-
+      {isYouTubeLink(post.content) ? (
+        <div className='post__videoContainer'>
+          <iframe
+            className='post__video'
+            title={post.caption}
+            src={`https://www.youtube.com/embed/${getVideoIdFromUrl(post.content)}`}
+            frameBorder='0'
+            allowFullScreen
+          />
+        </div>
+      ) : (
+        <img className='post__image' src={post.content} alt={post.caption} />
+      )}
+      <img className='post__arrow' src={white} alt="" onClick={goToHome} />
       <div className='post__all'>
 
         <div className='post__info'>
 
           <div className='post__user-name'>
-            <input className='post__input' type="url" />
-            <p className='post__name'>Jennie Kim</p>
+            <img className='post__input' src={author.avatar} alt={author.username} />
+            <p className='post__name'>{author.username}</p>
           </div>
 
           <div className='post__quantity'>
-            
-          <div className='post__div'>
-            <img className='post__icons' src={heart} alt="" />
-            <p>108K</p>
-          </div>
-          <div className='post__div'>
-            <img className='post__icons' src={comment} alt="" />
-            <p>54K</p>
-          </div>
-          <div className='post__div'>
-            <img className='post__icons' src={send} alt="" />
-            <p>2K</p>
-          </div>
+
+            <div className='post__div' onClick={() => handleLikePost(post.id)}>
+              {post.likedUsers.includes(userId) ? (
+                <img className='post__icons' src={like} alt="Like" />
+              ) : (
+                <img className='post__icons' src={heart} alt="Heart" />
+              )}
+              <p>{post.likes} K </p>
+            </div>
+            <div className='post__div'>
+              <img className='post__icons' src={comment} alt="" />
+              <p>54 K</p>
+            </div>
+            <div className='post__div'>
+              <img className='post__icons' src={send} alt="" />
+              <p>2 K</p>
+            </div>
 
           </div>
 
         </div>
 
         <div className='post__paragraph'>
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellat provident aperiam laboriosam delectus fugit tempore voluptatum soluta, rerum necessitatibus, esse perspiciatis cumque totam ratione iusto, ipsa sint repudiandae. Hic, facere.
-          </p>
-        </div>
+          <p>{post.caption}</p>
 
-        <div className='post__comment'>
-          <input className='post__commentUser' type="url" />
-          <input className='post__commentMessage' type="text" placeholder='Write comment as username...' />
         </div>
+        <div className='post__userComments'>
 
+          <h2>Comments</h2>
+          {console.log('Filtered comments:', comments.filter((comment) => comment.postId === postIdNumber))}
+          {postIdNumber &&
+            comments &&
+            comments
+              .filter((comment) => comment.postId === postIdNumber)
+              .map((comment) => (
+                <Comments key={comment.id} comment={comment} />
+              ))}
+          <div className="post__comment">
+            {userId && <img className="post__commentUser" src={userAvatar} alt="User" />}
+            <div>
+              <input
+                className="post__commentMessage"
+                type="text"
+                placeholder="Write comment here..."
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleCommentSubmit();
+                  }
+                }}
+              />
+            </div>
+
+            <img className="post__sendIcon" src={sendComment} alt="Send" onClick={handleCommentSubmit} />
+
+          </div>
+
+        </div>
       </div>
-
-
-
     </div>
   )
 }
 
-export default PostUser
+export default PostUser; 

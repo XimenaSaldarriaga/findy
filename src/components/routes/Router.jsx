@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { AuthProvider } from '../authContext.jsx';
 import Home from '../home/Home';
@@ -6,18 +6,28 @@ import PostUser from '../postUser/PostUser';
 import Profile from '../profile/Profile';
 import Login from '../login/Login';
 import Footer from '../footer/Footer';
-import UpdateUsers from '../updateUser/UpdateUser';
+import PrivateRouter from './PrivateRouter.jsx';
+
 
 const Router = () => {
+  const userAuthentication = JSON.parse(localStorage.getItem("authenticated")) || false;
+  const [isAuthenticated, setIsAuthenticated] = useState(userAuthentication);
+
+  useEffect(() => {
+    localStorage.setItem("authenticated", isAuthenticated)
+  }, [isAuthenticated])
     return (
       <AuthProvider>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Login />} />
-            <Route path="/home/:id" element={<Home />} />
-            <Route path="/profile/:userId" element={<Profile />} />
-            <Route path="/post/:userId" element={<PostUser />} />
-          </Routes>
+              <Route element={<PrivateRouter isAutenticate={isAuthenticated} />}>
+                <Route path="/home/:id" element={<Home signIn={setIsAuthenticated} login={isAuthenticated} />} />
+                <Route path="/profile/:userId" element={<Profile signIn={setIsAuthenticated} login={isAuthenticated} />} />
+                <Route path="/post/:postId" element={<PostUser signIn={setIsAuthenticated} login={isAuthenticated} />} />
+
+              </Route>
+             </Routes>
           <ShowFooterOnNonLoginPage />
         </BrowserRouter>
       </AuthProvider>
