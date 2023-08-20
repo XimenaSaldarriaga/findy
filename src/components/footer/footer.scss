@@ -1,17 +1,18 @@
 .footer {
     position: fixed;
     bottom: 0;
-    background-color: #FF7674;
+    background-image: url('../../assets/footer.png');
     display: flex;
     justify-content: space-between;
     width: 100%;
+    background-size: cover;
 
     &__left {
         display: flex;
         align-items: center;
         width: 20%;
         justify-content: space-between;
-        margin: 20px;
+        padding: 15px 35px;
     }
 
     &__left img {
@@ -19,7 +20,15 @@
     }
 
     &__center {
-        margin: 20px;
+        padding: 21px;
+        border-radius: 100%;
+        background-color: #FF7674;
+        align-self: center;
+        justify-self: center;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        bottom: 8px;
     }
 
     &__center img {
@@ -31,7 +40,7 @@
         align-items: center;
         width: 20%;
         justify-content: space-between;
-        margin: 20px;
+        padding: 15px 35px;
     }
 
     &__right img {

@@ -10,7 +10,7 @@ import PrivateRouter from './PrivateRouter.jsx';
 
 
 const Router = () => {
-  const userAuthentication = JSON.parse(localStorage.getItem("authenticated")) || false;
+  const userAuthentication = (localStorage.getItem("authenticated")) || false;
   const [isAuthenticated, setIsAuthenticated] = useState(userAuthentication);
 
   useEffect(() => {
