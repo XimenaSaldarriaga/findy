@@ -12,7 +12,7 @@
         align-items: center;
         width: 20%;
         justify-content: space-between;
-        padding: 15px 35px;
+        padding: 20px;
     }
 
     &__left img {
@@ -20,15 +20,11 @@
     }
 
     &__center {
-        padding: 21px;
+        padding: 7px;
         border-radius: 100%;
         background-color: #FF7674;
         align-self: center;
         justify-self: center;
-        position: relative;
-        display: flex;
-        justify-content: center;
-        bottom: 8px;
     }
 
     &__center img {
@@ -40,7 +36,7 @@
         align-items: center;
         width: 20%;
         justify-content: space-between;
-        padding: 15px 35px;
+        padding: 20px;
     }
 
     &__right img {
