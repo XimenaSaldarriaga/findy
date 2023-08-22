@@ -1,8 +1,8 @@
 import axios from 'axios';
-const URL_JSON_SERVER = "http://localhost:5000"
-export const URL_USERS = `${URL_JSON_SERVER}/users`;
-export const URL_POSTS = `${URL_JSON_SERVER}/posts`;
-export const URL_COMMENTS = `${URL_JSON_SERVER}/comments`;
+const URL_JSON_SERVER = "https://backfindy-vtg3.onrender.com/"
+export const URL_USERS = `${URL_JSON_SERVER}users`;
+export const URL_POSTS = `${URL_JSON_SERVER}posts`;
+export const URL_COMMENTS = `${URL_JSON_SERVER}comments`;
 
 export const fetchUserData = async (userId) => {
   try {
