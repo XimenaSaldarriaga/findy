@@ -6,6 +6,7 @@
     justify-content: space-between;
     width: 100%;
     background-size: cover;
+    align-items: center;
 
     &__left {
         display: flex;
@@ -23,12 +24,15 @@
         padding: 21px;
         border-radius: 100%;
         background-color: #FF7674;
-        align-self: center;
-        justify-self: center;
-        position: relative;
+        position: fixed;
+        bottom: 8px;
+        width: 20px;
+        height: 20px;
         display: flex;
         justify-content: center;
-        bottom: 8px;
+        align-items: center;
+        left: 50%;
+        transform: translateX(-50%);
     }
 
     &__center img {
@@ -58,3 +62,10 @@
     }
 }
 
+
+
+@media (max-width: 420px) {
+    .footer {
+        background-position: center;
+    }
+}
